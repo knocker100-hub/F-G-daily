@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1">
+<title>INV Daily</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="INV Daily">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;
+  --border:#21262d;--border2:#30363d;
+  --tx:#e6edf3;--tx2:#8b949e;--tx3:#484f58;
+  --blue:#58a6ff;--green:#3fb950;--amber:#e3b341;
+  --red:#f85149;--purple:#bc8cff;--orange:#ffa657;
+  --nav-h:58px;--hdr-h:64px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+button{background:none;border:none;cursor:pointer;font-family:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+svg{display:block;flex-shrink:0}
+input,textarea{font-family:inherit}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#0d1117 0%,#070b12 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .5s}
+.s-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--tx3);text-transform:uppercase}
+.s-logo{width:76px;height:76px;border-radius:18px;background:linear-gradient(145deg,#111827,#0a0f1c);border:1px solid #1e3a5f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.s-logo .l1{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:22px;color:var(--blue);letter-spacing:-1px}
+.s-logo .l2{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--tx3)}
+.s-title{font-size:20px;font-weight:600;color:var(--tx);letter-spacing:-.5px}
+.s-sub{font-size:12px;color:var(--tx2);text-align:center}
+.s-dots{display:flex;gap:6px;margin-top:4px}
+.s-dots span{width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:.3;animation:pd 1.2s ease infinite}
+.s-dots span:nth-child(2){animation-delay:.2s}
+.s-dots span:nth-child(3){animation-delay:.4s}
+@keyframes pd{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* LAYOUT */
+#app{height:100%;display:flex;flex-direction:column}
+#hdr{flex-shrink:0;height:var(--hdr-h);background:var(--bg2);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;gap:10px}
+.hdr-ta{flex:1;min-width:0}
+.hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:3px;color:var(--tx3);text-transform:uppercase;margin-bottom:2px}
+.hdr-title{font-size:17px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-acts{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.hbtn{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--tx2);transition:all .15s}
+.hbtn:hover{background:var(--bg3);color:var(--tx)}
+.hbtn.primary{background:var(--blue);color:#fff;width:auto;padding:0 13px;font-size:12px;font-weight:600;gap:5px;white-space:nowrap;height:34px}
+.hbtn.primary:hover{opacity:.9}
+.hbtn.primary:disabled{opacity:.5;cursor:default}
+.hbtn.danger{background:var(--red)}
+.hsw{display:flex;align-items:center;flex:1;min-width:0}
+.hsi{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:7px 10px 7px 30px;font-size:14px;color:var(--tx);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%23484f58' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:9px center}
+.hsi::placeholder{color:var(--tx3)}
+.hsi:focus{border-color:var(--blue)}
+
+#content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+#content::-webkit-scrollbar{width:3px}
+#content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+#nav{flex-shrink:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--tx3);transition:color .15s;font-size:10px;font-weight:500;padding:6px 0}
+.ntab.active{color:var(--blue)}
+.ntab svg{opacity:.65}
+.ntab.active svg{opacity:1}
+
+/* PAGES */
+.page{display:none;padding:12px 12px 16px}
+.page.active{display:block}
+
+/* TIMESTAMP BAR */
+.ts-bar{display:flex;align-items:center;gap:8px;padding:4px 0 12px}
+.ts-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:3px 9px;border-radius:5px}
+.ts-after{background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.2)}
+.ts-pre{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.2)}
+.ts-rt{background:rgba(227,179,65,.12);color:var(--amber);border:1px solid rgba(227,179,65,.2)}
+.ts-ins{background:rgba(188,140,255,.12);color:var(--purple);border:1px solid rgba(188,140,255,.2)}
+.ts-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3)}
+
+/* FG INSIGHT */
+.fg-box{background:linear-gradient(135deg,rgba(88,166,255,.07),rgba(88,166,255,.02));border:1px solid rgba(88,166,255,.18);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.fg-box-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2.5px;color:var(--blue);text-transform:uppercase;margin-bottom:8px}
+.fg-box-text{font-size:13px;color:var(--tx);line-height:1.65}
+
+/* ANALYSIS */
+.analysis-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.analysis-hdr{padding:12px 14px;border-bottom:1px solid var(--border)}
+.analysis-hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3)}
+.analysis-body{padding:12px 14px}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.acol{background:var(--bg3);border-radius:8px;padding:10px}
+.acol-lbl{font-size:10px;font-weight:600;margin-bottom:5px}
+.bull{color:var(--green)}.bear{color:var(--red)}
+.acol-txt{font-size:12px;color:var(--tx2);line-height:1.55}
+.stance-box{background:rgba(88,166,255,.07);border:1px solid rgba(88,166,255,.15);border-radius:8px;padding:10px}
+.stance-lbl{font-size:10px;font-weight:600;color:var(--blue);margin-bottom:4px}
+.stance-txt{font-size:12px;color:var(--tx);line-height:1.55}
+
+/* SECTION */
+.sec-grp{margin-bottom:18px}
+.sec-hdr{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sec-ttl{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.sec-cnt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);margin-left:auto}
+.sec-empty{font-size:12px;color:var(--tx3);padding:4px 2px}
+
+/* ARTICLE CARD */
+.acard{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;transition:border-color .15s}
+.acard:hover{border-color:var(--border2)}
+.acard.urg-high{border-left:3px solid var(--red)}
+.acard.urg-mid{border-left:3px solid var(--amber)}
+.atitle{font-size:13px;font-weight:600;color:var(--tx);line-height:1.45;margin-bottom:7px}
+.asum{font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:9px}
+
+/* FG LAYER */
+.fglayer{background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.12);border-radius:7px;padding:8px 10px;margin-bottom:9px}
+.fgcmt{font-size:12px;line-height:1.45;margin-bottom:6px}
+.fgcmt.pos{color:#5ab878}.fgcmt.neg{color:#d47070}.fgcmt.neu{color:var(--tx2)}
+.fgtr{display:flex;flex-wrap:wrap;gap:3px}
+.ftag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;letter-spacing:.2px}
+
+/* ARTICLE META */
+.ameta{display:flex;align-items:center;gap:6px}
+.asrc{font-size:10px;font-weight:600;color:var(--tx3)}
+.aacts{margin-left:auto;display:flex;align-items:center;gap:3px}
+.abtn{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--tx3);transition:all .15s}
+.abtn:hover{background:var(--bg3);color:var(--tx2)}
+.abtn.memo-on{color:var(--amber)}
+.alink{font-size:10px;font-weight:600;color:var(--blue);padding:4px 7px;border-radius:6px}
+.alink:hover{background:rgba(88,166,255,.1)}
+.amemo-box{margin-top:7px;background:rgba(227,179,65,.07);border:1px solid rgba(227,179,65,.2);border-radius:6px;padding:7px 9px}
+.amemo-txt{font-size:12px;color:var(--amber);line-height:1.45}
+
+/* REALTIME */
+.rt-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rt-title{font-size:15px;font-weight:600}
+.rt-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx3)}
+.snap-block{margin-bottom:20px}
+.snap-ts{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.snap-line{flex:1;height:1px;background:var(--border)}
+.snap-ts-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);white-space:nowrap;flex-shrink:0}
+.snap-qt{background:var(--bg3);border-radius:8px;padding:9px 12px;margin-bottom:10px}
+.snap-qt-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--tx3);margin-bottom:4px;text-transform:uppercase}
+.snap-qt-txt{font-size:13px;color:var(--tx);line-height:1.5}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;gap:12px}
+.empty-ic{color:var(--tx3)}
+.empty-ttl{font-size:15px;font-weight:600;color:var(--tx2)}
+.empty-sub{font-size:12px;color:var(--tx3);line-height:1.6;max-width:250px}
+.empty-btn{margin-top:6px;padding:9px 22px;background:var(--blue);color:#fff;border-radius:9px;font-size:13px;font-weight:600}
+
+/* LOADING */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px}
+.spinner{width:26px;height:26px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:13px;color:var(--tx2)}
+
+/* SEARCH RESULTS */
+.sr-tab{font-size:10px;background:var(--bg3);color:var(--tx3);padding:2px 7px;border-radius:4px;margin-bottom:6px;display:inline-block}
+.hl{background:rgba(227,179,65,.22);color:var(--amber);border-radius:2px;padding:0 1px}
+
+/* MODALS */
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
+.overlay.hidden{display:none}
+.sheet{background:var(--bg2);border:1px solid var(--border2);border-radius:16px 16px 0 0;width:100%;max-width:520px;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
+.sh-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 18px}
+.sh-title{font-size:16px;font-weight:700;margin-bottom:16px}
+.sh-sec{margin-bottom:20px}
+.sh-sec-ttl{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px}
+.igrp{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.ilbl{font-size:12px;font-weight:600;color:var(--tx2)}
+.ifield{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--tx);width:100%;outline:none}
+.ifield:focus{border-color:var(--blue)}
+.btn-p{width:100%;padding:12px;background:var(--blue);color:#fff;border-radius:10px;font-size:14px;font-weight:600}
+.btn-d{background:var(--red)!important}
+.btn-s{width:100%;padding:12px;background:var(--bg3);color:var(--tx);border-radius:10px;font-size:14px;font-weight:600;margin-top:8px}
+.gist-acts{display:flex;gap:8px;margin-top:8px}
+.gbtn{flex:1;padding:9px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-weight:600;color:var(--tx2);text-align:center;transition:all .15s}
+.gbtn:hover{border-color:var(--blue);color:var(--blue)}
+.gst{font-size:11px;color:var(--tx3);margin-top:8px;text-align:center;font-family:'JetBrains Mono',monospace}
+
+.sec-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;margin-bottom:3px;cursor:pointer;transition:background .12s}
+.sec-item:hover{background:var(--bg3)}
+.sec-item.disabled{opacity:.38;cursor:not-allowed;pointer-events:none}
+.si-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.si-name{font-size:13px;flex:1}
+.si-cur{font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace}
+.sec-grp-lbl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);padding:6px 2px 4px;margin-top:4px}
+
+.memo-ta{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--tx);resize:vertical;min-height:90px;outline:none;line-height:1.55}
+.memo-ta:focus{border-color:var(--blue)}
+
+/* TOAST */
+#toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 10px);left:50%;transform:translateX(-50%) translateY(16px);background:rgba(22,27,34,.95);border:1px solid var(--border2);color:var(--tx);font-size:13px;padding:9px 16px;border-radius:10px;white-space:nowrap;opacity:0;transition:all .25s;pointer-events:none;z-index:200;backdrop-filter:blur(8px)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="s-lbl">투자 브리핑</div>
+  <div class="s-logo"><div class="l1">INV</div><div class="l2">DAILY</div></div>
+  <div class="s-title">Investment Daily</div>
+  <div class="s-sub">F&amp;G 전략 기반 투자 뉴스 브리핑</div>
+  <div class="s-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+<!-- HEADER -->
+<div id="hdr">
+  <div class="hdr-ta">
+    <div class="hdr-lbl">INV DAILY</div>
+    <div class="hdr-title" id="hdr-title">장후 브리핑</div>
+  </div>
+  <div class="hdr-acts" id="hdr-acts"></div>
+</div>
+
+<!-- CONTENT -->
+<div id="content">
+  <div class="page active" id="page-after"><div id="after-el"></div></div>
+  <div class="page" id="page-pre"><div id="pre-el"></div></div>
+  <div class="page" id="page-rt"><div id="rt-el"></div></div>
+  <div class="page" id="page-ins"><div id="ins-el"></div></div>
+  <div class="page" id="page-search"><div id="search-el"></div></div>
+</div>
+
+<!-- NAV -->
+<div id="nav">
+  <button class="ntab active" data-p="after" onclick="switchPage('after')">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    장후
+  </button>
+  <button class="ntab" data-p="pre" onclick="switchPage('pre')">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+    장전
+  </button>
+  <button class="ntab" data-p="rt" onclick="switchPage('rt')">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    수시
+  </button>
+  <button class="ntab" data-p="ins" onclick="switchPage('ins')">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    인사이트
+  </button>
+  <button class="ntab" data-p="search" onclick="switchPage('search')">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    검색
+  </button>
+</div>
+
+</div><!-- #app -->
+
+<!-- MODAL: SETTINGS -->
+<div class="overlay hidden" id="m-settings">
+<div class="sheet">
+  <div class="sh-handle"></div>
+  <div class="sh-title">⚙ 설정</div>
+  <div class="sh-sec">
+    <div class="sh-sec-ttl">Anthropic API</div>
+    <div class="igrp">
+      <div class="ilbl">API Key (sk-ant-...)</div>
+      <input type="password" class="ifield" id="inp-api" placeholder="sk-ant-...">
+    </div>
+    <div style="font-size:11px;color:var(--tx3);line-height:1.6">뉴스 1회 수신 시 약 $0.01~0.03 소요 (Haiku 모델)</div>
+  </div>
+  <div class="sh-sec">
+    <div class="sh-sec-ttl">기기 간 동기화 (GitHub Gist)</div>
+    <div class="igrp">
+      <div class="ilbl">Personal Access Token (gist 권한)</div>
+      <input type="password" class="ifield" id="inp-tok" placeholder="ghp_...">
+    </div>
+    <div class="gist-acts">
+      <button class="gbtn" onclick="syncUp()">↑ 올리기</button>
+      <button class="gbtn" onclick="syncDown()">↓ 가져오기</button>
+    </div>
+    <div class="gst" id="gst"></div>
+  </div>
+  <div class="sh-sec">
+    <div class="sh-sec-ttl">iOS 자동화 (오전 6시)</div>
+    <div style="font-size:12px;color:var(--tx3);line-height:1.7">
+      단축어 앱 → 자동화 → + → 시간 → 오전 6:00<br>
+      → Safari 열기 → URL: <span style="color:var(--blue);font-family:monospace;font-size:11px" id="app-url">이 페이지 주소</span>
+    </div>
+  </div>
+  <button class="btn-p" onclick="saveSettings()">저장</button>
+  <button class="btn-s" onclick="closeM('m-settings')">닫기</button>
+</div>
+</div>
+
+<!-- MODAL: DELETE -->
+<div class="overlay hidden" id="m-del">
+<div class="sheet">
+  <div class="sh-handle"></div>
+  <div class="sh-title">기사 삭제</div>
+  <p style="font-size:13px;color:var(--tx2);margin-bottom:14px">이 기사를 삭제하시겠습니까?</p>
+  <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:20px">
+    <div style="font-size:13px;color:var(--tx)" id="del-title"></div>
+  </div>
+  <button class="btn-p btn-d" onclick="confirmDel()">예, 삭제</button>
+  <button class="btn-s" onclick="closeM('m-del')">아니오</button>
+</div>
+</div>
+
+<!-- MODAL: RECLASS -->
+<div class="overlay hidden" id="m-reclass">
+<div class="sheet">
+  <div class="sh-handle"></div>
+  <div class="sh-title">섹션 이동</div>
+  <div class="sh-sec">
+    <div class="sec-grp-lbl">장후 섹션</div>
+    <div id="rcl-after"></div>
+  </div>
+  <div class="sh-sec">
+    <div class="sec-grp-lbl">장전 섹션</div>
+    <div id="rcl-pre"></div>
+  </div>
+  <div class="sh-sec">
+    <div class="sec-grp-lbl">인사이트 섹션</div>
+    <div id="rcl-ins"></div>
+  </div>
+  <button class="btn-s" onclick="closeM('m-reclass')">닫기</button>
+</div>
+</div>
+
+<!-- MODAL: MEMO -->
+<div class="overlay hidden" id="m-memo">
+<div class="sheet">
+  <div class="sh-handle"></div>
+  <div class="sh-title">✏ 메모</div>
+  <div style="font-size:12px;color:var(--tx2);margin-bottom:12px;line-height:1.4" id="memo-ttl"></div>
+  <textarea class="memo-ta" id="memo-inp" placeholder="메모를 입력하세요..."></textarea>
+  <button class="btn-p" style="margin-top:12px" onclick="saveMemo()">저장</button>
+  <button class="btn-s" onclick="closeM('m-memo')">취소</button>
+</div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ================================================================
+   INV DAILY — Investment Daily Briefing
+   F&G Strategy-Connected Investment News App
+   ================================================================ */
+
+// ─── SECTION CONFIGS ──────────────────────────────────────────
+const AFTER_SECS = {
+  market_close:  {label:'미국 시장 마감', color:'#58a6ff', fg:['C1','C2']},
+  fed_macro:     {label:'Fed·주요 발언',   color:'#e3b341', fg:['C4','PI4']},
+  economic_data: {label:'경제지표',         color:'#3fb950', fg:['C4','§10']},
+  earnings:      {label:'실적 발표',        color:'#bc8cff', fg:['C1','§5']},
+  credit_bonds:  {label:'신용·채권',        color:'#f85149', fg:['HY OAS','C4']},
+  geopolitical:  {label:'지정학·매크로',    color:'#ffa657', fg:['PI4','C5']},
+};
+const PRE_SECS = {
+  asia_europe:  {label:'아시아·유럽',   color:'#58a6ff', fg:['C1','C4']},
+  events:       {label:'오늘 이벤트',   color:'#e3b341', fg:['§10']},
+  futures_vix:  {label:'선물·VIX',      color:'#3fb950', fg:['C3','HY OAS']},
+  news_update:  {label:'주요 업데이트', color:'#bc8cff', fg:['§5','§6']},
+};
+const INS_SECS = {
+  research: {label:'리서치 보고서', color:'#bc8cff'},
+  column:   {label:'전문가 칼럼',   color:'#58a6ff'},
+};
+const FG_CLR = {
+  'C1':'#58a6ff','C2':'#3fb950','C3':'#e3b341',
+  'C4':'#ffa657','C5':'#bc8cff',
+  'HY OAS':'#f85149','PI4':'#ff7b72','SMA125':'#79c0ff',
+  '§5':'#6e7681','§6':'#6e7681','§7':'#6e7681','§10':'#6e7681',
+};
+
+// ─── RSS FEEDS ────────────────────────────────────────────────
+const MARKET_FEEDS = [
+  {url:'https://feeds.reuters.com/reuters/businessNews',name:'Reuters'},
+  {url:'https://feeds.marketwatch.com/marketwatch/topstories/',name:'MarketWatch'},
+  {url:'https://www.cnbc.com/id/100003114/device/rss/rss.html',name:'CNBC'},
+  {url:'https://feeds.a.dj.com/rss/RSSMarketsMain.xml',name:'WSJ'},
+  {url:'https://www.federalreserve.gov/feeds/press_all.xml',name:'Federal Reserve'},
+  {url:'https://feeds.ft.com/rss/home/us',name:'FT'},
+  {url:'https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml',name:'NYT Economy'},
+  {url:'https://www.hankyung.com/feed/economy',name:'한국경제'},
+  {url:'https://www.mk.co.kr/rss/30200030',name:'매일경제'},
+  {url:'https://www.yna.co.kr/rss/economy.xml',name:'연합뉴스'},
+];
+const INS_FEEDS = [
+  {url:'https://www.economist.com/finance-and-economics/rss.xml',name:'The Economist'},
+  {url:'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml',name:'WSJ Business'},
+  {url:'https://www.project-syndicate.org/rss',name:'Project Syndicate'},
+  {url:'https://hrexecutive.com/feed/',name:'HRE'}, // reuse a business feed
+];
+
+// ─── SYSTEM PROMPTS ───────────────────────────────────────────
+const SYS_AFTER = `당신은 F&G(Fear & Greed) 투자 전략 분석가입니다.
+현재 포지션: SGOV 100% (현금 대기 중).
+
+F&G 핵심 지표 기준:
+- C1 모멘텀: NDX/SPY 추세, 반도체, 위험자산 방향
+- C2 시장폭: 상승 종목 비율, 거래량 방향
+- C3 심리: VIX 레벨/기간구조, 풋콜비율
+- C4 매크로: DXY, HYG, TLT 방향
+- C5 체제: BTC, 글로벌 체제 신호
+- HY OAS: 임계선 125bp (현재 고위험 구간, 접근 중)
+- PI4: 복합 충격 지수, 임계값 150
+- SMA125: 6개월봉 현재 음수 = 약세 구간
+
+수집된 기사들을 분석하여 반드시 아래 JSON 형식으로만 응답 (마크다운 없이 순수 JSON):
+{"sections":{"market_close":[],"fed_macro":[],"economic_data":[],"earnings":[],"credit_bonds":[],"geopolitical":[]},"fg_insight":"SGOV 유지/재진입 관점에서 F&G 전략 종합 판단 150자 이내"}
+
+각 기사 형식:
+{"title":"제목(영문이면 한국어 번역)","summary":"한국어 요약 2-3문장, F&G 지표 영향 중심","source":"출처","url":"URL","fg_tags":["C1","C4"],"fg_direction":"positive|negative|neutral","fg_comment":"F&G 전략 관점 한 줄 (예: HY OAS 확대 압력 → 재진입 조건 악화)","urgency":"high|medium|low"}
+
+섹션 배치(각 최대 3건):
+- market_close: NDX/SPY/섹터 종가, 지수 동향
+- fed_macro: Fed 발언/FOMC/주요 인사
+- economic_data: CPI/PCE/고용/GDP 등 경제지표
+- earnings: 기업 실적·가이던스 (선도 대기업 우선)
+- credit_bonds: HYG/TLT/스프레드/하이일드
+- geopolitical: 관세/지정학/정치 리스크/원유
+
+반드시 제외: 근거 없는 주식 추천, 광고성 기사, 단순 시세 나열`;
+
+const SYS_PRE = `당신은 F&G 투자 전략 분석가입니다. 오늘 장전 브리핑.
+동일한 F&G 기준 적용. 반드시 아래 JSON 형식으로만 응답:
+{"sections":{"asia_europe":[],"events":[],"futures_vix":[],"news_update":[]},"analysis":{"bull_case":"상승 논거 2-3줄","bear_case":"하락 논거 2-3줄","fg_stance":"SGOV 포지션 유지/재진입 관점 판단 2줄"}}
+
+섹션 배치:
+- asia_europe: 아시아/유럽 시장 동향 (최대 3건)
+- events: 오늘 예정 지표·이벤트 (최대 2건)
+- futures_vix: 선물/VIX/크레딧 스프레드 동향 (최대 2건)
+- news_update: 오버나이트 주요 업데이트 (최대 3건)
+각 기사 형식 동일.`;
+
+const SYS_RT = `수시 업데이트 모드. 지금 시점 기준 투자에 가장 중요한 뉴스를 최대 8개 선별하여 F&G 관점으로 분석.
+반드시 아래 JSON 형식으로만 응답:
+{"articles":[],"quick_take":"지금 F&G 관점 한 줄 판단 (SGOV 유지/경계 등)"}
+각 기사 형식 동일.`;
+
+const SYS_INS = `주간 투자 인사이트 분석가 모드. 리서치·칼럼 중심.
+반드시 아래 JSON 형식으로만 응답:
+{"sections":{"research":[],"column":[]},"fg_weekly_view":"이번 주 F&G 전략 관점 종합 분석 200자 이내"}
+research 최대 5건, column 최대 5건. 각 기사 형식 동일.`;
+
+// ─── KEYWORD FILTER ───────────────────────────────────────────
+const INV_KW = [
+  'market','stock','nasdaq','dow','spy','equity','shares','trading',
+  'rally','selloff','bull','bear','fed','federal reserve','fomc',
+  'interest rate','powell','monetary','inflation','cpi','pce','gdp',
+  'yield','bond','treasury','credit','spread','high yield','debt',
+  'tariff','trade','recession','dollar','dxy','oil','opec','vix',
+  'earnings','revenue','eps','guidance','semiconductor','chip','ai',
+  'nvidia','apple','microsoft','amazon','google','meta','tesla',
+  '주식','나스닥','연준','금리','인플레이션','국채','달러','관세',
+  '반도체','시장','증시','채권','코스피','경제','지표','실적',
+  '물가','고용','성장률','무역','유가','환율','투자','리스크',
+  '변동성','신용','스프레드','하이일드','선물',
+];
+function isInvRel(a) {
+  const t = ((a.title||'')+' '+(a.description||'')).toLowerCase();
+  return INV_KW.some(k => t.includes(k));
+}
+
+// ─── STATE ─────────────────────────────────────────────────────
+let _page = 'after';
+let _delTgt = null, _rclTgt = null, _memoTgt = null;
+let _rcStore = {};
+let _srchTimer = null;
+let _isLoading = false;
+
+// ─── STORAGE ──────────────────────────────────────────────────
+const today = () => new Date().toISOString().slice(0,10);
+const weekKey = () => {
+  const d = new Date(), day = d.getDay();
+  const m = new Date(d); m.setDate(d.getDate()-(day===0?6:day-1));
+  return m.toISOString().slice(0,10);
+};
+const ls  = k => { try{ return JSON.parse(localStorage.getItem(k)) }catch(e){ return null } };
+const lss = (k,v) => { try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){} };
+
+const getMemos  = () => ls('inv_memos') || {};
+const setMemos  = m => lss('inv_memos', m);
+const getAfter  = (d) => ls('inv_after_'+(d||today()));
+const setAfter  = (v,d) => lss('inv_after_'+(d||today()), v);
+const getPre    = (d) => ls('inv_pre_'+(d||today()));
+const setPre    = (v,d) => lss('inv_pre_'+(d||today()), v);
+const getRtList = () => ls('inv_rt_list') || [];
+const addRt     = snap => { const l=getRtList(); l.unshift(snap); if(l.length>50)l.pop(); lss('inv_rt_list',l); };
+const getIns    = (w) => ls('inv_ins_'+(w||weekKey()));
+const setIns    = (v,w) => lss('inv_ins_'+(w||weekKey()), v);
+
+// ─── RSS FETCH ────────────────────────────────────────────────
+async function fetchRSS(url, to=9000) {
+  const proxies = [
+    u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+    u => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}&count=15`,
+  ];
+  for(let i=0;i<proxies.length;i++){
+    try{
+      const ctrl=new AbortController(), t=setTimeout(()=>ctrl.abort(),to);
+      const r=await fetch(proxies[i](url),{signal:ctrl.signal});
+      clearTimeout(t);
+      if(!r.ok) continue;
+      const txt=await r.text();
+      if(i===2){
+        const j=JSON.parse(txt);
+        if(j.status!=='ok') continue;
+        return j.items.map(it=>({title:it.title,description:it.description||it.summary||'',link:it.link,pubDate:it.pubDate,source:''}));
+      }
+      const doc=new DOMParser().parseFromString(txt,'text/xml');
+      return Array.from(doc.querySelectorAll('item')).slice(0,15).map(it=>({
+        title:it.querySelector('title')?.textContent||'',
+        description:it.querySelector('description')?.textContent||'',
+        link:it.querySelector('link')?.textContent||'',
+        pubDate:it.querySelector('pubDate')?.textContent||'',
+        source:''
+      }));
+    }catch(e){continue}
+  }
+  return [];
+}
+
+async function fetchFeeds(feeds) {
+  let all=[];
+  for(let i=0;i<feeds.length;i+=4){
+    const batch=feeds.slice(i,i+4);
+    const res=await Promise.allSettled(batch.map(f=>fetchRSS(f.url)));
+    res.forEach((r,j)=>{
+      if(r.status==='fulfilled') r.value.forEach(a=>{a.source=batch[j].name;all.push(a)});
+    });
+  }
+  return all;
+}
+
+// ─── CLAUDE ───────────────────────────────────────────────────
+async function callClaude(sys, articles) {
+  const key=localStorage.getItem('inv_api_key')||'';
+  if(!key){showToast('API 키를 설정해주세요');return null}
+  const body=articles.slice(0,60).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source}\n${(a.description||'').slice(0,200)}\nURL:${a.link}`).join('\n\n');
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:4096,system:sys,
+      messages:[{role:'user',content:`오늘 날짜: ${today()}\n\n수집 기사 ${articles.length}건:\n\n${body}`}]})
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));showToast('API 오류: '+(e.error?.message||r.status));return null}
+  const d=await r.json();
+  const raw=d.content?.[0]?.text||'';
+  try{return JSON.parse(raw.replace(/```json|```/g,'').trim())}catch(e){showToast('응답 파싱 실패');return null}
+}
+
+async function doFetch(mode) {
+  if(_isLoading) return;
+  _isLoading=true; setLoadingUI(true);
+  try{
+    const feeds=mode==='ins'?INS_FEEDS:MARKET_FEEDS;
+    const all=await fetchFeeds(feeds);
+    const filtered=all.filter(isInvRel);
+    if(filtered.length<3) filtered.push(...all.slice(0,5));
+    const sys=mode==='after'?SYS_AFTER:mode==='pre'?SYS_PRE:mode==='rt'?SYS_RT:SYS_INS;
+    const result=await callClaude(sys,filtered);
+    if(!result){setLoadingUI(false);_isLoading=false;return}
+    result._at=new Date().toISOString();
+    if(mode==='after'){setAfter(result);renderAfter()}
+    else if(mode==='pre'){setPre(result);renderPre()}
+    else if(mode==='rt'){addRt(result);renderRt()}
+    else{setIns(result);renderIns()}
+    autoSync();
+  }finally{setLoadingUI(false);_isLoading=false}
+}
+
+// ─── RENDER UTILS ─────────────────────────────────────────────
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmt=iso=>{if(!iso)return'';const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+
+function fgTagsHtml(tags){
+  if(!tags||!tags.length)return'';
+  return tags.map(t=>{const c=FG_CLR[t]||'#6e7681';return`<span class="ftag" style="background:${c}18;color:${c};border:1px solid ${c}25">${t}</span>`}).join('');
+}
+
+function artHtml(a, sk, secK, tabK){
+  const id='r'+Math.random().toString(36).slice(2);
+  _rcStore[id]={a,sk,secK,tabK};
+  const memo=getMemos()[a.url]||'';
+  const urgCls=a.urgency==='high'?'urg-high':a.urgency==='medium'?'urg-mid':'';
+  const dirCls=a.fg_direction==='positive'?'pos':a.fg_direction==='negative'?'neg':'neu';
+  const canMove=tabK!=='rt';
+  return`<div class="acard ${urgCls}">
+  <div class="atitle">${esc(a.title)}</div>
+  <div class="asum">${esc(a.summary)}</div>
+  ${a.fg_comment?`<div class="fglayer">
+    <div class="fgcmt ${dirCls}"><span style="opacity:.5;font-size:10px;margin-right:4px">▷</span>${esc(a.fg_comment)}</div>
+    <div class="fgtr">${fgTagsHtml(a.fg_tags)}</div>
+  </div>`:''}
+  <div class="ameta">
+    <span class="asrc">${esc(a.source||'')}</span>
+    <div class="aacts">
+      ${a.url?`<a class="alink" href="${esc(a.url)}" target="_blank" rel="noopener">원문↗</a>`:''}
+      ${canMove?`<button class="abtn" onclick="openReclass('${id}')" title="이동"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4 4 4"/><path d="M17 8v12m0 0 4-4m-4 4-4-4"/></svg></button>`:''}
+      <button class="abtn" onclick="openDel('${id}')" title="삭제"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+      <button class="abtn ${memo?'memo-on':''}" onclick="openMemo('${id}')" title="메모"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+  ${memo?`<div class="amemo-box"><div class="amemo-txt">${esc(memo)}</div></div>`:''}
+</div>`;
+}
+
+function secGroupHtml(k,conf,arts,tabK,sk){
+  const cnt=arts&&arts.length||0;
+  return`<div class="sec-grp" id="sg-${sk}-${k}">
+  <div class="sec-hdr">
+    <div class="sec-dot" style="background:${conf.color}"></div>
+    <div class="sec-ttl" style="color:${conf.color}">${conf.label}</div>
+    <div class="sec-cnt">${cnt}건</div>
+  </div>
+  ${cnt?arts.map(a=>artHtml(a,sk,k,tabK)).join(''):`<div class="sec-empty">이번 회차 관련 뉴스 없음</div>`}
+</div>`;
+}
+
+// ─── RENDER ──────────────────────────────────────────────────
+function renderAfter(){
+  const d=getAfter(), el=document.getElementById('after-el');
+  if(!d){el.innerHTML=emptyHtml('장후 브리핑','미국 시장 마감 후 F&G 전략 관점 종합 브리핑','장후 받기','doFetch(\'after\')');return}
+  let h='';
+  if(d.fg_insight) h+=`<div class="fg-box"><div class="fg-box-lbl">⚡ F&amp;G 전략 판단</div><div class="fg-box-text">${esc(d.fg_insight)}</div></div>`;
+  h+=`<div class="ts-bar"><div class="ts-badge ts-after">장후</div><div class="ts-time">${fmt(d._at)} 업데이트</div></div>`;
+  const secs=d.sections||{};
+  Object.entries(AFTER_SECS).forEach(([k,c])=>h+=secGroupHtml(k,c,secs[k],'after','after_'+today()));
+  el.innerHTML=h;
+}
+
+function renderPre(){
+  const d=getPre(), el=document.getElementById('pre-el');
+  if(!d){el.innerHTML=emptyHtml('장전 브리핑','미국 장 시작 전 시장 준비 브리핑','장전 받기','doFetch(\'pre\')');return}
+  const secs=d.sections||{}, an=d.analysis||{};
+  let h=`<div class="ts-bar"><div class="ts-badge ts-pre">장전</div><div class="ts-time">${fmt(d._at)} 업데이트</div></div>`;
+  Object.entries(PRE_SECS).forEach(([k,c])=>h+=secGroupHtml(k,c,secs[k],'pre','pre_'+today()));
+  if(an.bull_case||an.bear_case) h+=`<div class="analysis-box">
+  <div class="analysis-hdr"><div class="analysis-hdr-lbl">균형 분석 &amp; F&amp;G 스탠스</div></div>
+  <div class="analysis-body">
+    <div class="analysis-grid">
+      <div class="acol"><div class="acol-lbl bull">▲ 상승 논거</div><div class="acol-txt">${esc(an.bull_case||'')}</div></div>
+      <div class="acol"><div class="acol-lbl bear">▼ 하락 논거</div><div class="acol-txt">${esc(an.bear_case||'')}</div></div>
+    </div>
+    ${an.fg_stance?`<div class="stance-box"><div class="stance-lbl">F&amp;G 전략 스탠스</div><div class="stance-txt">${esc(an.fg_stance)}</div></div>`:''}
+  </div>
+</div>`;
+  el.innerHTML=h;
+}
+
+function renderRt(){
+  const list=getRtList(), el=document.getElementById('rt-el');
+  if(!list.length){el.innerHTML=emptyHtml('수시 업데이트','횟수 제한 없이 지금 시점 주요 뉴스를 즉시 받습니다','지금 받기','doFetch(\'rt\')');return}
+  let h=`<div class="rt-hdr"><div class="rt-title">수시 업데이트</div><div class="rt-cnt">${list.length}개 스냅샷</div></div>`;
+  list.forEach((snap,i)=>{
+    h+=`<div class="snap-block">
+    <div class="snap-ts"><div class="snap-line"></div><div class="snap-ts-lbl">${fmt(snap._at)}</div><div class="snap-line"></div></div>
+    ${snap.quick_take?`<div class="snap-qt"><div class="snap-qt-lbl">Quick Take</div><div class="snap-qt-txt">${esc(snap.quick_take)}</div></div>`:''}
+    ${(snap.articles||[]).map(a=>artHtml(a,'rt_'+i,'rt','rt')).join('')}
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+
+function renderIns(){
+  const d=getIns(), el=document.getElementById('ins-el');
+  if(!d){el.innerHTML=emptyHtml('주간 인사이트','리서치 보고서와 전문가 칼럼을 F&G 관점으로 큐레이션','인사이트 받기','doFetch(\'ins\')');return}
+  let h='';
+  if(d.fg_weekly_view) h+=`<div class="fg-box"><div class="fg-box-lbl">📊 주간 F&amp;G 뷰</div><div class="fg-box-text">${esc(d.fg_weekly_view)}</div></div>`;
+  h+=`<div class="ts-bar"><div class="ts-badge ts-ins">인사이트</div><div class="ts-time">${fmt(d._at)} 업데이트</div></div>`;
+  const secs=d.sections||{};
+  Object.entries(INS_SECS).forEach(([k,c])=>h+=secGroupHtml(k,c,secs[k],'ins','ins_'+weekKey()));
+  el.innerHTML=h;
+}
+
+// ─── SEARCH ───────────────────────────────────────────────────
+function doSearch(q){
+  const el=document.getElementById('search-el');
+  if(!q||q.length<2){el.innerHTML='';return}
+  const re=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+  const hl=t=>esc(t).replace(re,m=>`<span class="hl">${m}</span>`);
+  const results=[];
+  const chk=(d,secs,tab)=>{if(!d||!d.sections)return;Object.values(d.sections).flat().forEach(a=>{if(a&&((a.title||'').match(re)||(a.summary||'').match(re)))results.push({...a,_tab:tab})})};
+  chk(getAfter(),AFTER_SECS,'장후');
+  chk(getPre(),PRE_SECS,'장전');
+  chk(getIns(),INS_SECS,'인사이트');
+  getRtList().forEach(s=>(s.articles||[]).forEach(a=>{if((a.title||'').match(re)||(a.summary||'').match(re))results.push({...a,_tab:'수시'})}));
+  if(!results.length){el.innerHTML=`<div style="font-size:13px;color:var(--tx3);padding:20px 4px">검색 결과 없음</div>`;return}
+  const memos=getMemos();
+  el.innerHTML=`<div style="font-size:11px;color:var(--tx3);margin-bottom:12px">${results.length}건 검색됨</div>`+results.map(a=>{
+    const memo=memos[a.url]||'';
+    return`<div class="acard">
+    <div style="margin-bottom:6px"><span class="sr-tab">${a._tab}</span> <span class="asrc">${esc(a.source||'')}</span></div>
+    <div class="atitle">${hl(a.title||'')}</div>
+    <div class="asum">${hl(a.summary||'')}</div>
+    <div class="ameta">${a.url?`<a class="alink" href="${esc(a.url)}" target="_blank" rel="noopener">원문↗</a>`:''}</div>
+    ${memo?`<div class="amemo-box"><div class="amemo-txt">${hl(memo)}</div></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ─── EMPTY / LOADING ──────────────────────────────────────────
+function emptyHtml(ttl,sub,btn,act){return`<div class="empty">
+  <svg class="empty-ic" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+  <div class="empty-ttl">${esc(ttl)}</div>
+  <div class="empty-sub">${esc(sub)}</div>
+  <button class="empty-btn" onclick="${act}">${esc(btn)}</button>
+</div>`}
+
+function setLoadingUI(on){
+  document.querySelectorAll('.hbtn.primary').forEach(b=>{b.disabled=on});
+  if(on){
+    const pageEl={after:'after-el',pre:'pre-el',rt:'rt-el',ins:'ins-el'}[_page];
+    if(pageEl) document.getElementById(pageEl).innerHTML=`<div class="loading"><div class="spinner"></div><div class="loading-txt">뉴스 수집·분석 중...</div></div>`;
+  }
+}
+
+// ─── SWITCH PAGE ─────────────────────────────────────────────
+const SYNC_BTN=`<button class="hbtn" onclick="syncRefresh()" title="새로고침"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>`;
+const FETCH_BTN=(label,mode)=>`<button class="hbtn primary" onclick="doFetch('${mode}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>${label}</button>`;
+const SET_BTN=`<button class="hbtn" onclick="openM('m-settings')" title="설정"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>`;
+
+function switchPage(p){
+  _page=p;
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelector(`.ntab[data-p="${p}"]`)?.classList.add('active');
+  document.getElementById('content').scrollTop=0;
+  const titles={after:'장후 브리핑',pre:'장전 브리핑',rt:'수시 업데이트',ins:'인사이트',search:'검색'};
+  document.getElementById('hdr-title').textContent=titles[p]||'';
+  const acts=document.getElementById('hdr-acts');
+  if(p==='after')     acts.innerHTML=SET_BTN+FETCH_BTN('장후 받기','after')+SYNC_BTN;
+  else if(p==='pre')  acts.innerHTML=FETCH_BTN('장전 받기','pre')+SYNC_BTN;
+  else if(p==='rt')   acts.innerHTML=FETCH_BTN('지금 받기','rt')+SYNC_BTN;
+  else if(p==='ins')  acts.innerHTML=FETCH_BTN('인사이트 받기','ins')+SYNC_BTN;
+  else if(p==='search') acts.innerHTML=`<div class="hsw"><input type="search" class="hsi" id="srch-inp" placeholder="검색" oninput="onSearch(this.value)"></div>`+SYNC_BTN;
+}
+
+function onSearch(v){ clearTimeout(_srchTimer); _srchTimer=setTimeout(()=>doSearch(v),280) }
+
+// ─── ARTICLE ACTIONS ─────────────────────────────────────────
+function openDel(id){
+  _delTgt=id;
+  document.getElementById('del-title').textContent=_rcStore[id].a.title;
+  openM('m-del');
+}
+function confirmDel(){
+  if(!_delTgt)return;
+  const {a,sk,secK,tabK}=_rcStore[_delTgt];
+  delArt(a,sk,secK,tabK); _delTgt=null; closeM('m-del');
+}
+function delArt(a,sk,secK,tabK){
+  const key=a.url||a.title;
+  const filter=arr=>arr.filter(x=>(x.url||x.title)!==key);
+  if(sk.startsWith('after_')){const d=getAfter();if(!d)return;if(d.sections[secK])d.sections[secK]=filter(d.sections[secK]);setAfter(d);renderAfter()}
+  else if(sk.startsWith('pre_')){const d=getPre();if(!d)return;if(d.sections[secK])d.sections[secK]=filter(d.sections[secK]);setPre(d);renderPre()}
+  else if(sk.startsWith('ins_')){const d=getIns();if(!d)return;if(d.sections[secK])d.sections[secK]=filter(d.sections[secK]);setIns(d);renderIns()}
+  else if(sk.startsWith('rt_')){const idx=parseInt(sk.split('_')[1]),l=getRtList();if(l[idx])l[idx].articles=filter(l[idx].articles||[]);lss('inv_rt_list',l);renderRt()}
+  autoSync(); showToast('삭제됨');
+}
+
+function openReclass(id){
+  _rclTgt=id;
+  const {sk,secK}=_rcStore[id];
+  const tabs=[['after',AFTER_SECS],['pre',PRE_SECS],['ins',INS_SECS]];
+  tabs.forEach(([t,secs])=>{
+    document.getElementById('rcl-'+t).innerHTML=Object.entries(secs).map(([k,c])=>{
+      const cur=sk.startsWith(t+'_')&&secK===k;
+      return`<div class="sec-item ${cur?'disabled':''}" onclick="doReclass('${t}','${k}')">
+        <div class="si-dot" style="background:${c.color}"></div>
+        <div class="si-name">${c.label}</div>
+        ${cur?'<div class="si-cur">← 현재</div>':''}
+      </div>`;
+    }).join('');
+  });
+  openM('m-reclass');
+}
+function doReclass(tt,ts){
+  if(!_rclTgt)return;
+  const {a,sk,secK}=_rcStore[_rclTgt];
+  // remove from source (quiet)
+  const key=a.url||a.title;
+  const filt=arr=>arr.filter(x=>(x.url||x.title)!==key);
+  if(sk.startsWith('after_')){const d=getAfter();if(d&&d.sections[secK]){d.sections[secK]=filt(d.sections[secK]);setAfter(d)}}
+  else if(sk.startsWith('pre_')){const d=getPre();if(d&&d.sections[secK]){d.sections[secK]=filt(d.sections[secK]);setPre(d)}}
+  else if(sk.startsWith('ins_')){const d=getIns();if(d&&d.sections[secK]){d.sections[secK]=filt(d.sections[secK]);setIns(d)}}
+  // add to target
+  if(tt==='after'){const d=getAfter()||{sections:{},_at:new Date().toISOString()};if(!d.sections)d.sections={};if(!d.sections[ts])d.sections[ts]=[];d.sections[ts].unshift(a);setAfter(d)}
+  else if(tt==='pre'){const d=getPre()||{sections:{},_at:new Date().toISOString()};if(!d.sections)d.sections={};if(!d.sections[ts])d.sections[ts]=[];d.sections[ts].unshift(a);setPre(d)}
+  else if(tt==='ins'){const d=getIns()||{sections:{},_at:new Date().toISOString()};if(!d.sections)d.sections={};if(!d.sections[ts])d.sections[ts]=[];d.sections[ts].unshift(a);setIns(d)}
+  closeM('m-reclass'); renderAfter(); renderPre(); renderIns();
+  autoSync(); showToast('이동 완료');
+}
+
+function openMemo(id){
+  _memoTgt=id;
+  const {a}=_rcStore[id];
+  document.getElementById('memo-ttl').textContent=a.title;
+  document.getElementById('memo-inp').value=getMemos()[a.url]||'';
+  openM('m-memo');
+}
+function saveMemo(){
+  if(!_memoTgt)return;
+  const {a}=_rcStore[_memoTgt];
+  const memos=getMemos(), v=document.getElementById('memo-inp').value.trim();
+  if(v)memos[a.url]=v; else delete memos[a.url];
+  setMemos(memos); closeM('m-memo');
+  if(_page==='after')renderAfter();
+  else if(_page==='pre')renderPre();
+  else if(_page==='rt')renderRt();
+  else if(_page==='ins')renderIns();
+  autoSync(); showToast('메모 저장됨');
+}
+
+// ─── SETTINGS ────────────────────────────────────────────────
+function saveSettings(){
+  const k=document.getElementById('inp-api').value.trim();
+  const t=document.getElementById('inp-tok').value.trim();
+  if(k)localStorage.setItem('inv_api_key',k);
+  if(t)localStorage.setItem('inv_gist_token',t);
+  closeM('m-settings'); showToast('저장됨');
+}
+
+// ─── GIST SYNC ────────────────────────────────────────────────
+let _gistId=null;
+async function autoSync(){
+  const tok=localStorage.getItem('inv_gist_token'); if(!tok)return;
+  try{await gistUp(tok)}catch(e){}
+}
+async function syncUp(){
+  const tok=localStorage.getItem('inv_gist_token')||document.getElementById('inp-tok').value.trim();
+  if(!tok){document.getElementById('gst').textContent='토큰을 입력해주세요';return}
+  document.getElementById('gst').textContent='업로드 중...';
+  try{await gistUp(tok);document.getElementById('gst').textContent='완료 ✓ '+new Date().toLocaleTimeString('ko')}
+  catch(e){document.getElementById('gst').textContent='오류: '+e.message}
+}
+async function syncDown(){
+  const tok=localStorage.getItem('inv_gist_token')||document.getElementById('inp-tok').value.trim();
+  if(!tok){document.getElementById('gst').textContent='토큰을 입력해주세요';return}
+  document.getElementById('gst').textContent='가져오는 중...';
+  try{await gistDl(tok);document.getElementById('gst').textContent='완료 ✓ '+new Date().toLocaleTimeString('ko');renderAfter();renderPre();renderRt();renderIns()}
+  catch(e){document.getElementById('gst').textContent='오류: '+e.message}
+}
+async function syncRefresh(){
+  const tok=localStorage.getItem('inv_gist_token');
+  if(!tok){showToast('Gist 토큰 미설정');return}
+  try{await gistDl(tok);renderAfter();renderPre();renderRt();renderIns();showToast('동기화 완료')}
+  catch(e){showToast('동기화 실패')}
+}
+function gistFiles(){
+  const files={};
+  Object.keys(localStorage).filter(k=>k.startsWith('inv_')&&!['inv_api_key','inv_gist_token','inv_gist_id'].includes(k)).forEach(k=>{
+    files[k+'.json']={content:localStorage.getItem(k)||'{}'};
+  });
+  return files;
+}
+async function gistUp(tok){
+  const id=localStorage.getItem('inv_gist_id')||_gistId;
+  const body={description:'INV Daily Sync',public:false,files:gistFiles()};
+  let r;
+  if(id){r=await fetch(`https://api.github.com/gists/${id}`,{method:'PATCH',headers:{'Authorization':`token ${tok}`,'Content-Type':'application/json'},body:JSON.stringify(body)})}
+  else{r=await fetch('https://api.github.com/gists',{method:'POST',headers:{'Authorization':`token ${tok}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(r.ok){const d=await r.json();_gistId=d.id;localStorage.setItem('inv_gist_id',d.id)}}
+  if(!r||!r.ok)throw new Error('HTTP '+(r?.status||'?'));
+}
+async function gistDl(tok){
+  const id=localStorage.getItem('inv_gist_id')||_gistId;
+  if(!id)throw new Error('Gist ID 없음. 먼저 올리기를 눌러주세요.');
+  const r=await fetch(`https://api.github.com/gists/${id}`,{headers:{'Authorization':`token ${tok}`}});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const d=await r.json();
+  Object.entries(d.files||{}).forEach(([fn,fd])=>{const k=fn.replace('.json','');if(k.startsWith('inv_')&&fd.content)localStorage.setItem(k,fd.content)});
+}
+
+// ─── MODAL ───────────────────────────────────────────────────
+function openM(id){document.getElementById(id).classList.remove('hidden')}
+function closeM(id){document.getElementById(id).classList.add('hidden')}
+document.querySelectorAll('.overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)el.classList.add('hidden')})});
+
+// ─── TOAST ───────────────────────────────────────────────────
+let _tt;
+function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2200)}
+
+// ─── AUTO FETCH LOGIC ────────────────────────────────────────
+function shouldAuto(){
+  const kst=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'}));
+  const h=kst.getHours();
+  // 장후: KST 6am~9pm (미국 장 마감 후 시간대)
+  if(h>=6&&h<21&&!getAfter()){doFetch('after');return}
+  // 장전: KST 9pm~6am (미국 장 시작 전)
+  if((h>=21||h<6)&&!getPre()){doFetch('pre');return}
+  // 인사이트: 월요일
+  if(kst.getDay()===1&&!getIns()) setTimeout(()=>doFetch('ins'),3000);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+function init(){
+  // Restore settings
+  const k=localStorage.getItem('inv_api_key');
+  if(k) document.getElementById('inp-api').value=k;
+  const t=localStorage.getItem('inv_gist_token');
+  if(t) document.getElementById('inp-tok').value=t;
+  document.getElementById('app-url').textContent=location.href.split('?')[0];
+
+  // Splash dismiss
+  setTimeout(()=>{
+    const s=document.getElementById('splash');
+    s.style.opacity='0';
+    setTimeout(()=>{s.style.display='none';document.getElementById('app').style.display='flex'},500);
+  },1600);
+
+  // Initial renders
+  switchPage('after');
+  renderAfter(); renderPre(); renderRt(); renderIns();
+
+  // Auto fetch after splash
+  setTimeout(shouldAuto, 2200);
+
+  // Service Worker
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+init();
+</script>
+</body>
+</html>
