@@ -357,46 +357,46 @@ const SYS_AFTER=`당신은 시장 전문 에디터입니다. 수집된 기사들
 highlights는 오늘 꼭 알아야 할 핵심 팩트 3~5개. dot_color는 긍정=#3fb950, 부정=#f85149, 중립=#e3b341.
 관련 기사 없는 섹션은 null. 영문 내용은 반드시 한국어로.
 
-【팩트체크 필수 원칙】
-1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
-2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
-3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
-4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
-5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
+【작성 원칙】
+1. 수집된 기사에서 파악 가능한 내용을 최대한 활용해 작성. 기사가 1건이어도 그 내용으로 섹션을 채울 것
+2. 수치나 발언 인용 시 출처를 괄호로 명시 (예: 로이터에 따르면, WSJ 보도)
+3. 불확실한 내용은 "~로 전해졌다", "~로 알려졌다"로 표현
+4. 관련 기사가 전혀 없을 때만 null. 기사가 1건이라도 있으면 반드시 내용 작성
+5. 영문 내용은 모두 한국어로 번역`;
 
 const SYS_PRE=`당신은 시장 전문 에디터입니다. 장 시작 전 브리핑을 아래 JSON 형식으로만 응답하세요 (마크다운 없이 순수 JSON).
 
 각 섹션 형식 동일. 응답:
 {"highlights":[{"text":"오늘 장 시작 전 알아야 할 핵심 한 문장","dot_color":"#컬러"}],"sections":{"asia_europe":null,"events":null,"futures_vix":null,"news_update":null},"morning_summary":"오늘 장 시작 전 전체 흐름 3~4문장"}
 
-【팩트체크 필수 원칙】
-1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
-2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
-3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
-4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
-5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
+【작성 원칙】
+1. 수집된 기사에서 파악 가능한 내용을 최대한 활용해 작성. 기사가 1건이어도 그 내용으로 섹션을 채울 것
+2. 수치나 발언 인용 시 출처를 괄호로 명시 (예: 로이터에 따르면, WSJ 보도)
+3. 불확실한 내용은 "~로 전해졌다", "~로 알려졌다"로 표현
+4. 관련 기사가 전혀 없을 때만 null. 기사가 1건이라도 있으면 반드시 내용 작성
+5. 영문 내용은 모두 한국어로 번역`;
 
 const SYS_RT=`시장 에디터입니다. 지금 이 순간 가장 중요한 뉴스를 주제별로 묶어 통합 기사로 정리. JSON만 응답.
 {"highlights":[{"text":"지금 핵심","dot_color":"#컬러"}],"articles":[{"headline":"제목","body":"7~10문장 통합 기사","analysis":"3~4문장 분석","sources":[],"urls":[],"urgency":"high|medium|low"}],"snapshot_summary":"지금 시장 흐름 2~3문장"}
 최대 5개 섹션.
 
-【팩트체크 필수 원칙】
-1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
-2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
-3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
-4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
-5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
+【작성 원칙】
+1. 수집된 기사에서 파악 가능한 내용을 최대한 활용해 작성. 기사가 1건이어도 그 내용으로 섹션을 채울 것
+2. 수치나 발언 인용 시 출처를 괄호로 명시 (예: 로이터에 따르면, WSJ 보도)
+3. 불확실한 내용은 "~로 전해졌다", "~로 알려졌다"로 표현
+4. 관련 기사가 전혀 없을 때만 null. 기사가 1건이라도 있으면 반드시 내용 작성
+5. 영문 내용은 모두 한국어로 번역`;
 
 const SYS_INS=`시장 분석 에디터입니다. 리서치 보고서와 전문가 칼럼의 핵심 논지를 통합 정리. JSON만 응답.
 {"articles":[{"headline":"핵심 논지 제목","body":"7~10문장 내용 정리","analysis":"3~4문장 투자 시사점","sources":[],"urls":[],"urgency":"high|medium|low"}],"weekly_summary":"이번 주 가장 주목할 시각 3~4문장"}
 최대 8개.
 
-【팩트체크 필수 원칙】
-1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
-2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
-3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
-4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
-5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
+【작성 원칙】
+1. 수집된 기사에서 파악 가능한 내용을 최대한 활용해 작성. 기사가 1건이어도 그 내용으로 섹션을 채울 것
+2. 수치나 발언 인용 시 출처를 괄호로 명시 (예: 로이터에 따르면, WSJ 보도)
+3. 불확실한 내용은 "~로 전해졌다", "~로 알려졌다"로 표현
+4. 관련 기사가 전혀 없을 때만 null. 기사가 1건이라도 있으면 반드시 내용 작성
+5. 영문 내용은 모두 한국어로 번역`;
 
 // ─── KEYWORD FILTER ──────────────────────────────────────────
 const INV_KW=['market','stock','nasdaq','s&p','dow','equity','shares','trading','rally','selloff','bull','bear','fed','federal reserve','fomc','powell','interest rate','monetary','inflation','cpi','pce','gdp','yield','bond','treasury','credit','spread','high yield','junk','debt','tariff','trade','recession','dollar','dxy','oil','opec','vix','earnings','revenue','eps','guidance','semiconductor','chip','ai','nvidia','apple','microsoft','amazon','google','meta','tesla','jpmorgan','goldman','morgan stanley','blackrock','주식','나스닥','연준','금리','인플레이션','국채','달러','관세','반도체','시장','증시','채권','경제','지표','실적','물가','고용','성장률','무역','유가','환율','투자','리스크','변동성','신용','스프레드','하이일드','선물','파월','연방'];
@@ -574,7 +574,7 @@ function highlightsHtml(hl){
 }
 
 function secArticleHtml(sec,conf){
-  if(!sec)return'';
+  if(!sec||(!sec.headline&&!sec.body))return'';
   const id='a'+Math.random().toString(36).slice(2);
   const urgCls=sec.urgency==='high'?'urg-high':sec.urgency==='medium'?'urg-mid':'';
   const urlList=(sec.urls||[]).filter(Boolean);
@@ -623,7 +623,11 @@ function renderAfter(){
   h+=highlightsHtml(d.highlights);
   h+=summaryBox('📋 오늘의 요약',d.daily_summary);
   h+='<div class="sec-wrap">';
-  Object.entries(AFTER_SECS).forEach(([k,c])=>{if(d.sections?.[k])h+=secArticleHtml(d.sections[k],c)});
+  Object.entries(AFTER_SECS).forEach(([k,c])=>{
+    const sec=d.sections?.[k];
+    if(sec)h+=secArticleHtml(sec,c);
+    else h+=`<div class="sec-article" style="opacity:.4"><div class="art-hdr"><div class="art-label"><div class="art-dot" style="background:${c.color}"></div><div class="art-lbl-txt" style="color:${c.color}">${c.label}</div></div><div class="art-headline" style="font-size:13px;color:var(--tx3)">이번 수신에서 관련 뉴스 없음</div></div></div>`;
+  });
   h+='</div>';
   el.innerHTML=h;
   setTimeout(fetchMarket,100);
@@ -637,7 +641,11 @@ function renderPre(){
   h+=highlightsHtml(d.highlights);
   h+=summaryBox('📋 오늘 아침 요약',d.morning_summary);
   h+='<div class="sec-wrap">';
-  Object.entries(PRE_SECS).forEach(([k,c])=>{if(d.sections?.[k])h+=secArticleHtml(d.sections[k],c)});
+  Object.entries(PRE_SECS).forEach(([k,c])=>{
+    const sec=d.sections?.[k];
+    if(sec)h+=secArticleHtml(sec,c);
+    else h+=`<div class="sec-article" style="opacity:.4"><div class="art-hdr"><div class="art-label"><div class="art-dot" style="background:${c.color}"></div><div class="art-lbl-txt" style="color:${c.color}">${c.label}</div></div><div class="art-headline" style="font-size:13px;color:var(--tx3)">이번 수신에서 관련 뉴스 없음</div></div></div>`;
+  });
   h+='</div>';
   el.innerHTML=h;
   setTimeout(fetchMarket,100);
@@ -717,7 +725,7 @@ function setLoadingUI(on,msg='뉴스 수집 중...'){
 function setLoadingMsg(msg){const el=document.getElementById('loading-msg');if(el)el.textContent=msg}
 
 // ─── NAV / HEADER ────────────────────────────────────────────
-const FETCH_BTN=(lbl,mode)=>`<button class="hbtn fetch" onclick="doFetch('${mode}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>${lbl}</button>`;
+const FETCH_BTN=(lbl,mode)=>`<button class="hbtn fetch" onclick="clearAndFetch('${mode}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>${lbl}</button>`;
 const SET_BTN=`<button class="hbtn" onclick="openM('m-settings')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>`;
 const SYNC_BTN=`<button class="hbtn" onclick="syncRefresh()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>`;
 
@@ -808,6 +816,15 @@ document.querySelectorAll('.overlay').forEach(el=>el.addEventListener('click',e=
 let _tt;
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2500)}
 
+// ─── CLEAR & FETCH
+function clearAndFetch(mode){
+  // 오늘 캐시 삭제 후 새로 받기
+  if(mode==='after')localStorage.removeItem('inv_after_'+today());
+  else if(mode==='pre')localStorage.removeItem('inv_pre_'+today());
+  else if(mode==='rt'){/* 수시는 누적 유지 */}
+  else if(mode==='ins')localStorage.removeItem('inv_ins_'+weekKey());
+  doFetch(mode);
+}
 // ─── INIT ────────────────────────────────────────────────────
 function init(){
   const k=localStorage.getItem('inv_api_key'),t=localStorage.getItem('inv_gist_token'),w=localStorage.getItem('inv_worker_url');
