@@ -537,8 +537,16 @@ async function doFetch(mode){
     const feeds=mode==='ins'?INS_FEEDS:MARKET_FEEDS;
     const all=await fetchFeeds(feeds);
     const filtered=all.filter(a=>isInvRel(a)&&isRecent(a));
-    const final=filtered.length>=5?filtered:all.filter(isInvRel).slice(0,40);
-    setLoadingMsg(`${final.length}건 분석 중...`);
+    const pool=filtered.length>=5?filtered:all.filter(isInvRel);
+    // 소스 다양성 확보: 소스당 최대 3건, 총 40건으로 제한
+    const seen={}, final=[];
+    for(const a of pool){
+      const s=a.source||'';
+      seen[s]=(seen[s]||0)+1;
+      if(seen[s]<=3)final.push(a);
+      if(final.length>=40)break;
+    }
+    setLoadingMsg(`${pool.length}건 수집 → ${final.length}건 선별 분석 중...`);
     const sys=mode==='after'?SYS_AFTER:mode==='pre'?SYS_PRE:mode==='rt'?SYS_RT:SYS_INS;
     const result=await callClaude(sys,final);
     if(!result)return;
