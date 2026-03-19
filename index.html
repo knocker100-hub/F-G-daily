@@ -555,7 +555,21 @@ async function callClaude(sys, articles) {
   if(!r.ok){const e=await r.json().catch(()=>({}));showToast('API 오류: '+(e.error?.message||r.status));return null}
   const d=await r.json();
   const raw=d.content?.[0]?.text||'';
-  try{return JSON.parse(raw.replace(/```json|```/g,'').trim())}catch(e){showToast('응답 파싱 실패');return null}
+  console.log('Claude raw response:', raw.slice(0,500));
+  try{
+    // 1. 직접 파싱
+    const clean=raw.replace(/```json|```/g,'').trim();
+    try{return JSON.parse(clean)}catch(e1){}
+    // 2. JSON 블록 추출
+    const m=clean.match(/\{[\s\S]*\}/);
+    if(m){try{return JSON.parse(m[0])}catch(e2){}}
+    // 3. 첫번째 { 부터 마지막 } 까지
+    const s=clean.indexOf('{'), e2=clean.lastIndexOf('}');
+    if(s>=0&&e2>s){try{return JSON.parse(clean.slice(s,e2+1))}catch(e3){}}
+    console.error('Parse failed, raw:', raw);
+    showToast('응답 파싱 실패 — 콘솔 확인');
+    return null;
+  }catch(e){showToast('응답 파싱 실패');return null}
 }
 
 async function doFetch(mode) {
