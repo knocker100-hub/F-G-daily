@@ -544,15 +544,30 @@ async function fetchFeeds(feeds) {
 async function callClaude(sys, articles) {
   const key=localStorage.getItem('inv_api_key')||'';
   if(!key){showToast('API 키를 설정해주세요');return null}
-  const body=articles.slice(0,60).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source}\n${(a.description||'').slice(0,200)}\nURL:${a.link}`).join('\n\n');
-  const apiUrl='https://corsproxy.io/?'+encodeURIComponent('https://api.anthropic.com/v1/messages');
-  const r=await fetch(apiUrl,{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:6000,system:sys,
-      messages:[{role:'user',content:`오늘 날짜: ${today()}\n\n수집 기사 ${articles.length}건:\n\n${body}`}]})
-  });
-  if(!r.ok){const e=await r.json().catch(()=>({}));showToast('API 오류: '+(e.error?.message||r.status));return null}
+  // 기사 30건으로 줄이고 본문 100자로 축약
+  const body=articles.slice(0,30).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source}\n${(a.description||'').slice(0,100)}\nURL:${a.link}`).join('\n\n');
+  const PROXIES=[
+    u=>'https://corsproxy.io/?'+encodeURIComponent(u),
+    u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  ];
+  const TARGET='https://api.anthropic.com/v1/messages';
+  const payload=JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:4096,system:sys,
+    messages:[{role:'user',content:`오늘 날짜: ${today()}\n\n수집 기사 ${articles.length}건 (상위 30건 전달):\n\n${body}`}]});
+  let r=null;
+  for(const proxy of PROXIES){
+    try{
+      const ctrl=new AbortController();
+      const tout=setTimeout(()=>ctrl.abort(),40000);
+      r=await fetch(proxy(TARGET),{signal:ctrl.signal,method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:payload});
+      clearTimeout(tout);
+      if(r.ok) break;
+      console.warn('proxy failed status',r.status,'trying next');
+      r=null;
+    }catch(e){console.warn('proxy error',e.message);r=null}
+  }
+  if(!r||!r.ok){const msg=r?((await r.json().catch(()=>({}))).error?.message||r.status):'네트워크 오류';showToast('API 오류: '+msg);return null}
   const d=await r.json();
   const raw=d.content?.[0]?.text||'';
   console.log('Claude raw response:', raw.slice(0,500));
