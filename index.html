@@ -462,43 +462,42 @@ async function fetchMarket(){
 }
 
 // ─── RSS FETCH ───────────────────────────────────────────────
-async function fetchRSS(url,to=7000){
-  const proxies=[
-    u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
-    u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-    u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}&count=20`,
-  ];
-  for(const proxy of proxies){
+async function fetchRSS(url){
+  // rss2json 단일 프록시 — 가장 빠르고 안정적
+  try{
+    const apiUrl=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=15`;
+    const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),5000);
+    const r=await fetch(apiUrl,{signal:ctrl.signal});
+    clearTimeout(t);
+    if(!r.ok)throw new Error(r.status);
+    const j=await r.json();
+    if(j.status!=='ok')throw new Error('rss2json error');
+    return j.items.map(it=>({title:it.title,description:it.description||it.summary||'',link:it.link,pubDate:it.pubDate,source:''}));
+  }catch(e){
+    // 폴백: corsproxy
     try{
-      const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),to);
-      const r=await fetch(proxy(url),{signal:ctrl.signal});
+      const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),4000);
+      const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`,{signal:ctrl.signal});
       clearTimeout(t);
-      if(!r.ok)continue;
+      if(!r.ok)return[];
       const txt=await r.text();
-      if(proxy(url).includes('rss2json')){
-        const j=JSON.parse(txt);if(j.status!=='ok')continue;
-        return j.items.map(it=>({title:it.title,description:it.description||it.summary||'',link:it.link,pubDate:it.pubDate,source:''}));
-      }
       const doc=new DOMParser().parseFromString(txt,'text/xml');
-      return Array.from(doc.querySelectorAll('item')).slice(0,20).map(it=>({
+      return Array.from(doc.querySelectorAll('item')).slice(0,15).map(it=>({
         title:it.querySelector('title')?.textContent||'',
         description:it.querySelector('description')?.textContent||'',
         link:it.querySelector('link')?.textContent||'',
         pubDate:it.querySelector('pubDate')?.textContent||'',source:''
       }));
-    }catch(e){continue}
+    }catch(e2){return[]}
   }
-  return[];
 }
 
 async function fetchFeeds(feeds){
-  let all=[];
-  for(let i=0;i<feeds.length;i+=5){
-    setLoadingMsg(`RSS 수집 중 (${Math.min(i+5,feeds.length)}/${feeds.length})...`);
-    const batch=feeds.slice(i,i+5);
-    const res=await Promise.allSettled(batch.map(f=>fetchRSS(f.url)));
-    res.forEach((r,j)=>{if(r.status==='fulfilled')r.value.forEach(a=>{a.source=batch[j].name;all.push(a)})});
-  }
+  // 전체 병렬 fetch — 느린 피드 기다리지 않고 먼저 온 것부터 수집
+  setLoadingMsg('뉴스 수집 중...');
+  const res=await Promise.allSettled(feeds.map(f=>fetchRSS(f.url).then(items=>items.map(a=>({...a,source:f.name})))));
+  const all=[];
+  res.forEach(r=>{if(r.status==='fulfilled')all.push(...r.value)});
   return all;
 }
 
