@@ -465,7 +465,7 @@ async function fetchMarket(){
 async function fetchRSS(url){
   // rss2json 단일 프록시 — 가장 빠르고 안정적
   try{
-    const apiUrl=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=15`;
+    const apiUrl=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=25`;
     const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),5000);
     const r=await fetch(apiUrl,{signal:ctrl.signal});
     clearTimeout(t);
@@ -482,7 +482,7 @@ async function fetchRSS(url){
       if(!r.ok)return[];
       const txt=await r.text();
       const doc=new DOMParser().parseFromString(txt,'text/xml');
-      return Array.from(doc.querySelectorAll('item')).slice(0,15).map(it=>({
+      return Array.from(doc.querySelectorAll('item')).slice(0,25).map(it=>({
         title:it.querySelector('title')?.textContent||'',
         description:it.querySelector('description')?.textContent||'',
         link:it.querySelector('link')?.textContent||'',
@@ -507,7 +507,7 @@ async function callClaude(sys,articles){
   const workerUrl=localStorage.getItem('inv_worker_url')||'';
   if(!key){showToast('API 키를 설정해주세요');return null}
   if(!workerUrl){showToast('⚙ 설정에서 Worker URL을 입력해주세요');return null}
-  const body=articles.slice(0,20).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source}\n${(a.description||'').replace(/<[^>]+>/g,'').slice(0,80)}\nURL:${a.link}`).join('\n\n');
+  const body=articles.slice(0,40).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source}\n${(a.description||'').replace(/<[^>]+>/g,'').slice(0,200)}\nURL:${a.link}`).join('\n\n');
   const payload=JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:3000,system:sys,
     messages:[{role:'user',content:`오늘 날짜: ${today()}\n수집 기사 ${articles.length}건 (상위 20건 전달):\n\n${body}`}]});
   let r;
