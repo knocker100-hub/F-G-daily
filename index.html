@@ -11,281 +11,228 @@
 <meta name="apple-mobile-web-app-title" content="INV Daily">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;--bg4:#21262d;
   --border:#21262d;--border2:#30363d;
   --tx:#e6edf3;--tx2:#8b949e;--tx3:#484f58;
   --blue:#58a6ff;--green:#3fb950;--amber:#e3b341;
   --red:#f85149;--purple:#bc8cff;--orange:#ffa657;
-  --nav-h:58px;--hdr-h:64px;
+  --nav-h:58px;--hdr-h:52px;
+  --font:'Pretendard',-apple-system,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:var(--font);-webkit-tap-highlight-color:transparent}
 button{background:none;border:none;cursor:pointer;font-family:inherit;color:inherit}
 a{color:inherit;text-decoration:none}
-svg{display:block;flex-shrink:0}
-input,textarea{font-family:inherit}
 
 /* SPLASH */
-#splash{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#0d1117 0%,#070b12 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .5s}
-.s-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--tx3);text-transform:uppercase}
-.s-logo{width:76px;height:76px;border-radius:18px;background:linear-gradient(145deg,#111827,#0a0f1c);border:1px solid #1e3a5f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
-.s-logo .l1{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:22px;color:var(--blue);letter-spacing:-1px}
+#splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transition:opacity .4s}
+.s-logo{width:72px;height:72px;border-radius:16px;background:var(--bg2);border:1px solid var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.s-logo .l1{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:20px;color:var(--blue)}
 .s-logo .l2{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--tx3)}
-.s-title{font-size:20px;font-weight:600;color:var(--tx);letter-spacing:-.5px}
-.s-sub{font-size:12px;color:var(--tx2);text-align:center}
-.s-dots{display:flex;gap:6px;margin-top:4px}
-.s-dots span{width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:.3;animation:pd 1.2s ease infinite}
-.s-dots span:nth-child(2){animation-delay:.2s}
-.s-dots span:nth-child(3){animation-delay:.4s}
+.s-title{font-size:18px;font-weight:700;color:var(--tx)}
+.s-sub{font-size:12px;color:var(--tx3)}
+.s-dots{display:flex;gap:5px;margin-top:6px}
+.s-dots span{width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:.3;animation:pd 1.2s ease infinite}
+.s-dots span:nth-child(2){animation-delay:.2s}.s-dots span:nth-child(3){animation-delay:.4s}
 @keyframes pd{0%,100%{opacity:.3}50%{opacity:1}}
 
 /* LAYOUT */
 #app{height:100%;display:flex;flex-direction:column}
-#hdr{flex-shrink:0;height:var(--hdr-h);background:var(--bg2);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;gap:10px}
-.hdr-ta{flex:1;min-width:0}
-.hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:3px;color:var(--tx3);text-transform:uppercase;margin-bottom:2px}
-.hdr-title{font-size:17px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hdr-acts{display:flex;align-items:center;gap:5px;flex-shrink:0}
-.hbtn{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--tx2);transition:all .15s}
+#hdr{flex-shrink:0;height:var(--hdr-h);background:var(--bg2);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;gap:8px}
+.hdr-title{font-size:15px;font-weight:700;color:var(--tx);flex:1}
+.hdr-acts{display:flex;align-items:center;gap:4px}
+.hbtn{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--tx2);transition:all .15s;flex-shrink:0}
 .hbtn:hover{background:var(--bg3);color:var(--tx)}
-.hbtn.primary{background:var(--blue);color:#fff;width:auto;padding:0 13px;font-size:12px;font-weight:600;gap:5px;white-space:nowrap;height:34px}
-.hbtn.primary:hover{opacity:.9}
-.hbtn.primary:disabled{opacity:.5;cursor:default}
-.hbtn.danger{background:var(--red)}
-.hsw{display:flex;align-items:center;flex:1;min-width:0}
-.hsi{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:7px 10px 7px 30px;font-size:14px;color:var(--tx);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%23484f58' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:9px center}
+.hbtn.fetch{background:var(--blue);color:#fff;width:auto;padding:0 12px;font-size:12px;font-weight:700;gap:5px;height:32px;border-radius:8px}
+.hbtn.fetch:disabled{opacity:.5;cursor:default}
+.hbtn.fetch:hover:not(:disabled){opacity:.88}
+.hsw{flex:1;position:relative}
+.hsi{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:7px 10px 7px 30px;font-size:14px;color:var(--tx);outline:none;font-family:var(--font)}
 .hsi::placeholder{color:var(--tx3)}
 .hsi:focus{border-color:var(--blue)}
+.hsw svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none}
 
 #content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-#content::-webkit-scrollbar{width:3px}
-#content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+#content::-webkit-scrollbar{width:2px}
+#content::-webkit-scrollbar-thumb{background:var(--border2)}
 
 #nav{flex-shrink:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}
-.ntab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--tx3);transition:color .15s;font-size:10px;font-weight:500;padding:6px 0}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--tx3);font-size:10px;font-weight:500;padding:6px 0;transition:color .15s}
 .ntab.active{color:var(--blue)}
-.ntab svg{opacity:.65}
-.ntab.active svg{opacity:1}
+.ntab svg{opacity:.6}.ntab.active svg{opacity:1}
 
-/* PAGES */
-.page{display:none;padding:12px 12px 16px}
+.page{display:none;padding:0 0 16px}
 .page.active{display:block}
 
-/* TIMESTAMP BAR */
-.ts-bar{display:flex;align-items:center;gap:8px;padding:4px 0 12px}
-.ts-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:3px 9px;border-radius:5px}
-.ts-after{background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.2)}
-.ts-pre{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.2)}
-.ts-rt{background:rgba(227,179,65,.12);color:var(--amber);border:1px solid rgba(227,179,65,.2)}
-.ts-ins{background:rgba(188,140,255,.12);color:var(--purple);border:1px solid rgba(188,140,255,.2)}
-.ts-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3)}
+/* MARKET DASHBOARD */
+.mkt-dash{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 14px 14px}
+.mkt-dash-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2.5px;color:var(--tx3);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.mkt-ts{font-size:9px;color:var(--tx3);margin-left:auto;font-family:'JetBrains Mono',monospace}
+.mkt-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.mkt-cell{background:var(--bg3);border-radius:8px;padding:8px 7px;text-align:center}
+.mkt-sym{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:var(--tx3);margin-bottom:4px;letter-spacing:.5px}
+.mkt-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:2px}
+.mkt-chg{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
+.mkt-up{color:var(--green)}.mkt-dn{color:var(--red)}.mkt-nc{color:var(--tx3)}
+.mkt-skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;height:13px;width:60%;margin:0 auto}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* FG INSIGHT */
-.fg-box{background:linear-gradient(135deg,rgba(88,166,255,.07),rgba(88,166,255,.02));border:1px solid rgba(88,166,255,.18);border-radius:12px;padding:14px 16px;margin-bottom:14px}
-.fg-box-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2.5px;color:var(--blue);text-transform:uppercase;margin-bottom:8px}
-.fg-box-text{font-size:13px;color:var(--tx);line-height:1.65}
+/* HIGHLIGHTS */
+.highlights{padding:12px 14px;border-bottom:1px solid var(--border)}
+.hl-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:9px}
+.hl-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px}
+.hl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.hl-txt{font-size:13px;color:var(--tx);line-height:1.55}
 
-/* ANALYSIS */
-.analysis-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
-.analysis-hdr{padding:12px 14px;border-bottom:1px solid var(--border)}
-.analysis-hdr-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3)}
-.analysis-body{padding:12px 14px}
-.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.acol{background:var(--bg3);border-radius:8px;padding:10px}
-.acol-lbl{font-size:10px;font-weight:600;margin-bottom:5px}
-.bull{color:var(--green)}.bear{color:var(--red)}
-.acol-txt{font-size:12px;color:var(--tx2);line-height:1.55}
-.stance-box{background:rgba(88,166,255,.07);border:1px solid rgba(88,166,255,.15);border-radius:8px;padding:10px}
-.stance-lbl{font-size:10px;font-weight:600;color:var(--blue);margin-bottom:4px}
-.stance-txt{font-size:12px;color:var(--tx);line-height:1.55}
+/* SECTION ARTICLES */
+.sec-wrap{padding:12px 14px 0}
+.sec-article{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-article.urg-high{border-left:3px solid var(--red)}
+.sec-article.urg-mid{border-left:3px solid var(--amber)}
+.art-hdr{padding:13px 14px 11px;cursor:pointer;user-select:none}
+.art-label{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.art-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.art-lbl-txt{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.art-chevron{margin-left:auto;font-size:11px;color:var(--tx3);transition:transform .2s}
+.art-chevron.open{transform:rotate(180deg)}
+.art-headline{font-size:15px;font-weight:700;color:var(--tx);line-height:1.45}
+.art-body-wrap{display:none;border-top:1px solid var(--border)}
+.art-body-wrap.open{display:block}
+.art-body{padding:13px 14px;font-size:13.5px;color:var(--tx);line-height:1.85}
+.art-analysis{margin:12px 14px;background:rgba(88,166,255,.05);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:11px 13px}
+.art-analysis-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:7px}
+.art-analysis-txt{font-size:13px;color:var(--tx2);line-height:1.8}
+.art-footer{padding:10px 14px 13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.art-src{font-size:11px;color:var(--tx3)}
+.art-links{margin-left:auto;display:flex;gap:5px}
+.art-link{font-size:11px;font-weight:600;color:var(--blue);padding:4px 9px;border-radius:6px;background:rgba(88,166,255,.08)}
 
-/* SECTION */
-.sec-grp{margin-bottom:18px}
-.sec-hdr{display:flex;align-items:center;gap:7px;margin-bottom:9px}
-.sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sec-ttl{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.sec-cnt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);margin-left:auto}
-.sec-empty{font-size:12px;color:var(--tx3);padding:4px 2px}
+/* SUMMARY BOX */
+.summary-box{margin:12px 14px 0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.summary-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:9px}
+.summary-txt{font-size:14px;color:var(--tx);line-height:1.8}
 
-/* ARTICLE CARD */
-.acard{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;transition:border-color .15s}
-.acard:hover{border-color:var(--border2)}
-.acard.urg-high{border-left:3px solid var(--red)}
-.acard.urg-mid{border-left:3px solid var(--amber)}
-.atitle{font-size:13px;font-weight:600;color:var(--tx);line-height:1.45;margin-bottom:7px}
-.asum{font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:9px}
-
-/* FG LAYER */
-.fglayer{background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.12);border-radius:7px;padding:8px 10px;margin-bottom:9px}
-.fgcmt{font-size:12px;line-height:1.45;margin-bottom:6px}
-.fgcmt.pos{color:#5ab878}.fgcmt.neg{color:#d47070}.fgcmt.neu{color:var(--tx2)}
-.fgtr{display:flex;flex-wrap:wrap;gap:3px}
-.ftag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;letter-spacing:.2px}
-
-/* ARTICLE META */
-.ameta{display:flex;align-items:center;gap:6px}
-.asrc{font-size:10px;font-weight:600;color:var(--tx3)}
-.aacts{margin-left:auto;display:flex;align-items:center;gap:3px}
-.abtn{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--tx3);transition:all .15s}
-.abtn:hover{background:var(--bg3);color:var(--tx2)}
-.abtn.memo-on{color:var(--amber)}
-.alink{font-size:10px;font-weight:600;color:var(--blue);padding:4px 7px;border-radius:6px}
-.alink:hover{background:rgba(88,166,255,.1)}
-.amemo-box{margin-top:7px;background:rgba(227,179,65,.07);border:1px solid rgba(227,179,65,.2);border-radius:6px;padding:7px 9px}
-.amemo-txt{font-size:12px;color:var(--amber);line-height:1.45}
-
-/* REALTIME */
-.rt-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.rt-title{font-size:15px;font-weight:600}
-.rt-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx3)}
-.snap-block{margin-bottom:20px}
-.snap-ts{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+/* RT */
+.rt-snap{margin:12px 14px 0}
+.snap-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px;margin-top:4px}
 .snap-line{flex:1;height:1px;background:var(--border)}
-.snap-ts-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);white-space:nowrap;flex-shrink:0}
-.snap-qt{background:var(--bg3);border-radius:8px;padding:9px 12px;margin-bottom:10px}
-.snap-qt-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--tx3);margin-bottom:4px;text-transform:uppercase}
-.snap-qt-txt{font-size:13px;color:var(--tx);line-height:1.5}
-
-/* EMPTY */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;gap:12px}
-.empty-ic{color:var(--tx3)}
-.empty-ttl{font-size:15px;font-weight:600;color:var(--tx2)}
-.empty-sub{font-size:12px;color:var(--tx3);line-height:1.6;max-width:250px}
-.empty-btn{margin-top:6px;padding:9px 22px;background:var(--blue);color:#fff;border-radius:9px;font-size:13px;font-weight:600}
+.snap-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);white-space:nowrap}
 
 /* LOADING */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px}
-.spinner{width:26px;height:26px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;gap:14px}
+.spinner{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-size:13px;color:var(--tx2)}
+.loading-txt{font-size:13px;color:var(--tx2);text-align:center}
 
-/* SEARCH RESULTS */
-.sr-tab{font-size:10px;background:var(--bg3);color:var(--tx3);padding:2px 7px;border-radius:4px;margin-bottom:6px;display:inline-block}
-.hl{background:rgba(227,179,65,.22);color:var(--amber);border-radius:2px;padding:0 1px}
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;gap:10px}
+.empty-ic{color:var(--tx3);margin-bottom:4px}
+.empty-ttl{font-size:15px;font-weight:700;color:var(--tx2)}
+.empty-sub{font-size:12px;color:var(--tx3);line-height:1.65;max-width:260px}
+.empty-btn{margin-top:8px;padding:10px 24px;background:var(--blue);color:#fff;border-radius:9px;font-size:13px;font-weight:700}
+
+/* SEARCH */
+.hl{background:rgba(227,179,65,.2);color:var(--amber);border-radius:2px;padding:0 1px}
+.sr-tab{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);background:var(--bg3);padding:2px 7px;border-radius:4px;margin-bottom:6px;display:inline-block}
 
 /* MODALS */
-.overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}
 .overlay.hidden{display:none}
-.sheet{background:var(--bg2);border:1px solid var(--border2);border-radius:16px 16px 0 0;width:100%;max-width:520px;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
+.sheet{background:var(--bg2);border:1px solid var(--border2);border-radius:16px 16px 0 0;width:100%;max-width:540px;padding:20px 20px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
 .sh-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 18px}
-.sh-title{font-size:16px;font-weight:700;margin-bottom:16px}
+.sh-title{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--tx)}
 .sh-sec{margin-bottom:20px}
-.sh-sec-ttl{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px}
+.sh-sec-ttl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px}
 .igrp{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
 .ilbl{font-size:12px;font-weight:600;color:var(--tx2)}
-.ifield{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--tx);width:100%;outline:none}
+.ifield{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--tx);width:100%;outline:none;font-family:var(--font)}
 .ifield:focus{border-color:var(--blue)}
-.btn-p{width:100%;padding:12px;background:var(--blue);color:#fff;border-radius:10px;font-size:14px;font-weight:600}
-.btn-d{background:var(--red)!important}
-.btn-s{width:100%;padding:12px;background:var(--bg3);color:var(--tx);border-radius:10px;font-size:14px;font-weight:600;margin-top:8px}
+.btn-p{width:100%;padding:12px;background:var(--blue);color:#fff;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font)}
+.btn-s{width:100%;padding:12px;background:var(--bg3);color:var(--tx);border-radius:10px;font-size:14px;font-weight:600;margin-top:8px;font-family:var(--font)}
 .gist-acts{display:flex;gap:8px;margin-top:8px}
-.gbtn{flex:1;padding:9px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-weight:600;color:var(--tx2);text-align:center;transition:all .15s}
+.gbtn{flex:1;padding:9px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-weight:600;color:var(--tx2);text-align:center;transition:all .15s;font-family:var(--font)}
 .gbtn:hover{border-color:var(--blue);color:var(--blue)}
 .gst{font-size:11px;color:var(--tx3);margin-top:8px;text-align:center;font-family:'JetBrains Mono',monospace}
+.code-block{background:var(--bg3);border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);line-height:1.7;white-space:pre-wrap;margin-top:8px;overflow-x:auto}
 
-.sec-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;margin-bottom:3px;cursor:pointer;transition:background .12s}
-.sec-item:hover{background:var(--bg3)}
-.sec-item.disabled{opacity:.38;cursor:not-allowed;pointer-events:none}
-.si-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.si-name{font-size:13px;flex:1}
-.si-cur{font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace}
-.sec-grp-lbl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);padding:6px 2px 4px;margin-top:4px}
-
-.memo-ta{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--tx);resize:vertical;min-height:90px;outline:none;line-height:1.55}
-.memo-ta:focus{border-color:var(--blue)}
-
-/* TOAST */
-#toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 10px);left:50%;transform:translateX(-50%) translateY(16px);background:rgba(22,27,34,.95);border:1px solid var(--border2);color:var(--tx);font-size:13px;padding:9px 16px;border-radius:10px;white-space:nowrap;opacity:0;transition:all .25s;pointer-events:none;z-index:200;backdrop-filter:blur(8px)}
+#toast{position:fixed;bottom:calc(var(--nav-h)+env(safe-area-inset-bottom)+12px);left:50%;transform:translateX(-50%) translateY(14px);background:rgba(22,27,34,.95);border:1px solid var(--border2);color:var(--tx);font-size:13px;padding:9px 16px;border-radius:10px;white-space:nowrap;opacity:0;transition:all .25s;pointer-events:none;z-index:200;backdrop-filter:blur(8px)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
-  <div class="s-lbl">투자 브리핑</div>
   <div class="s-logo"><div class="l1">INV</div><div class="l2">DAILY</div></div>
   <div class="s-title">Investment Daily</div>
-  <div class="s-sub">F&amp;G 전략 기반 투자 뉴스 브리핑</div>
+  <div class="s-sub">시장을 읽는 가장 빠른 방법</div>
   <div class="s-dots"><span></span><span></span><span></span></div>
 </div>
 
-<!-- APP -->
 <div id="app" style="display:none">
-
-<!-- HEADER -->
 <div id="hdr">
-  <div class="hdr-ta">
-    <div class="hdr-lbl">INV DAILY</div>
-    <div class="hdr-title" id="hdr-title">장후 브리핑</div>
-  </div>
+  <div class="hdr-title" id="hdr-title">장후 브리핑</div>
   <div class="hdr-acts" id="hdr-acts"></div>
 </div>
-
-<!-- CONTENT -->
 <div id="content">
   <div class="page active" id="page-after"><div id="after-el"></div></div>
   <div class="page" id="page-pre"><div id="pre-el"></div></div>
   <div class="page" id="page-rt"><div id="rt-el"></div></div>
   <div class="page" id="page-ins"><div id="ins-el"></div></div>
-  <div class="page" id="page-search"><div id="search-el"></div></div>
+  <div class="page" id="page-search">
+    <div style="padding:12px 14px 0">
+      <div style="position:relative" class="hsw">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--tx3)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="search" class="hsi" id="srch-inp" placeholder="기사 검색" oninput="onSearch(this.value)" style="padding-left:30px">
+      </div>
+    </div>
+    <div id="search-el" style="padding:10px 14px 0"></div>
+  </div>
 </div>
-
-<!-- NAV -->
 <div id="nav">
   <button class="ntab active" data-p="after" onclick="switchPage('after')">
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    장후
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>장후
   </button>
   <button class="ntab" data-p="pre" onclick="switchPage('pre')">
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
-    장전
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>장전
   </button>
   <button class="ntab" data-p="rt" onclick="switchPage('rt')">
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-    수시
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>수시
   </button>
   <button class="ntab" data-p="ins" onclick="switchPage('ins')">
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-    인사이트
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>인사이트
   </button>
   <button class="ntab" data-p="search" onclick="switchPage('search')">
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    검색
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>검색
   </button>
 </div>
+</div>
 
-</div><!-- #app -->
-
-<!-- MODAL: SETTINGS -->
+<!-- SETTINGS MODAL -->
 <div class="overlay hidden" id="m-settings">
 <div class="sheet">
   <div class="sh-handle"></div>
   <div class="sh-title">⚙ 설정</div>
   <div class="sh-sec">
-    <div class="sh-sec-ttl">Cloudflare Worker URL</div>
+    <div class="sh-sec-ttl">프록시 서버 주소</div>
     <div class="igrp">
-      <div class="ilbl">Worker URL (https://xxx.workers.dev)</div>
+      <div class="ilbl">Worker 주소</div>
       <input type="text" class="ifield" id="inp-worker" placeholder="https://inv-proxy.xxx.workers.dev">
     </div>
-    <div style="font-size:11px;color:var(--tx3);line-height:1.7">Worker 없으면 아래 가이드 참고<br>→ <span style="color:var(--blue)">⚙ 아래 Worker 만들기 가이드</span></div>
   </div>
   <div class="sh-sec">
-    <div class="sh-sec-ttl">Anthropic API</div>
+    <div class="sh-sec-ttl">Anthropic API 키</div>
     <div class="igrp">
-      <div class="ilbl">API Key (sk-ant-...)</div>
-      <input type="password" class="ifield" id="inp-api" placeholder="sk-ant-...">
+      <input type="password" class="ifield" id="inp-api" placeholder="sk-ant-api03-...">
     </div>
-    <div style="font-size:11px;color:var(--tx3);line-height:1.6">뉴스 1회 수신 시 약 $0.01~0.03 소요 (Haiku 모델)</div>
+    <div style="font-size:11px;color:var(--tx3);line-height:1.6">Haiku 모델 · 1회 약 $0.01~0.03</div>
   </div>
   <div class="sh-sec">
     <div class="sh-sec-ttl">기기 간 동기화 (GitHub Gist)</div>
     <div class="igrp">
-      <div class="ilbl">Personal Access Token (gist 권한)</div>
-      <input type="password" class="ifield" id="inp-tok" placeholder="ghp_...">
+      <input type="password" class="ifield" id="inp-tok" placeholder="ghp_... (GitHub 개인 액세스 토큰)">
     </div>
     <div class="gist-acts">
       <button class="gbtn" onclick="syncUp()">↑ 올리기</button>
@@ -294,541 +241,486 @@ input,textarea{font-family:inherit}
     <div class="gst" id="gst"></div>
   </div>
   <div class="sh-sec">
-    <div class="sh-sec-ttl">Worker 만들기 (5분)</div>
-    <div style="font-size:12px;color:var(--tx3);line-height:1.8">
-      1. <a href="https://dash.cloudflare.com" target="_blank" style="color:var(--blue)">dash.cloudflare.com</a> 로그인<br>
-      2. Workers &amp; Pages → Create → Hello World<br>
-      3. 이름: <span style="color:var(--amber);font-family:monospace">inv-proxy</span> → Deploy<br>
-      4. Edit Code → 아래 코드로 교체 → Save &amp; Deploy<br>
-      5. Worker URL 복사 → 위 입력란에 붙여넣기
-    </div>
-    <div style="background:var(--bg3);border-radius:8px;padding:10px;margin-top:8px;font-family:monospace;font-size:11px;color:var(--green);line-height:1.7;white-space:pre-wrap">export default {
+    <div class="sh-sec-ttl">프록시 Worker 코드 (Cloudflare에 붙여넣기)</div>
+    <div class="code-block">export default {
   async fetch(req) {
-    if(req.method==='OPTIONS') return new Response(null,{headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'*','Access-Control-Allow-Methods':'POST'}});
-    const r = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{...Object.fromEntries(req.headers),'anthropic-dangerous-direct-browser-access':'true'},body:req.body});
-    const res = new Response(r.body,r);
+    if(req.method==='OPTIONS') return new Response(null,{headers:{
+      'Access-Control-Allow-Origin':'*',
+      'Access-Control-Allow-Headers':'*',
+      'Access-Control-Allow-Methods':'POST'
+    }});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{...Object.fromEntries(req.headers),
+        'anthropic-dangerous-direct-browser-access':'true'},
+      body:req.body
+    });
+    const res=new Response(r.body,r);
     res.headers.set('Access-Control-Allow-Origin','*');
     return res;
   }
 }</div>
-  </div>
-  <div class="sh-sec">
-    <div class="sh-sec-ttl">iOS 자동화 (오전 6시)</div>
-    <div style="font-size:12px;color:var(--tx3);line-height:1.7">
-      단축어 앱 → 자동화 → + → 시간 → 오전 6:00<br>
-      → Safari 열기 → URL: <span style="color:var(--blue);font-family:monospace;font-size:11px" id="app-url">이 페이지 주소</span>
-    </div>
   </div>
   <button class="btn-p" onclick="saveSettings()">저장</button>
   <button class="btn-s" onclick="closeM('m-settings')">닫기</button>
 </div>
 </div>
 
-<!-- MODAL: DELETE -->
-<div class="overlay hidden" id="m-del">
-<div class="sheet">
-  <div class="sh-handle"></div>
-  <div class="sh-title">기사 삭제</div>
-  <p style="font-size:13px;color:var(--tx2);margin-bottom:14px">이 기사를 삭제하시겠습니까?</p>
-  <div style="background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:20px">
-    <div style="font-size:13px;color:var(--tx)" id="del-title"></div>
-  </div>
-  <button class="btn-p btn-d" onclick="confirmDel()">예, 삭제</button>
-  <button class="btn-s" onclick="closeM('m-del')">아니오</button>
-</div>
-</div>
-
-<!-- MODAL: RECLASS -->
-<div class="overlay hidden" id="m-reclass">
-<div class="sheet">
-  <div class="sh-handle"></div>
-  <div class="sh-title">섹션 이동</div>
-  <div class="sh-sec">
-    <div class="sec-grp-lbl">장후 섹션</div>
-    <div id="rcl-after"></div>
-  </div>
-  <div class="sh-sec">
-    <div class="sec-grp-lbl">장전 섹션</div>
-    <div id="rcl-pre"></div>
-  </div>
-  <div class="sh-sec">
-    <div class="sec-grp-lbl">인사이트 섹션</div>
-    <div id="rcl-ins"></div>
-  </div>
-  <button class="btn-s" onclick="closeM('m-reclass')">닫기</button>
-</div>
-</div>
-
-<!-- MODAL: MEMO -->
-<div class="overlay hidden" id="m-memo">
-<div class="sheet">
-  <div class="sh-handle"></div>
-  <div class="sh-title">✏ 메모</div>
-  <div style="font-size:12px;color:var(--tx2);margin-bottom:12px;line-height:1.4" id="memo-ttl"></div>
-  <textarea class="memo-ta" id="memo-inp" placeholder="메모를 입력하세요..."></textarea>
-  <button class="btn-p" style="margin-top:12px" onclick="saveMemo()">저장</button>
-  <button class="btn-s" onclick="closeM('m-memo')">취소</button>
-</div>
-</div>
-
 <div id="toast"></div>
 
 <script>
-/* ================================================================
-   INV DAILY — Investment Daily Briefing
-   F&G Strategy-Connected Investment News App
-   ================================================================ */
+/* INV Daily v2 — Market-first, Integrated Articles */
 
-// ─── SECTION CONFIGS ──────────────────────────────────────────
-const AFTER_SECS = {
-  market_close:  {label:'미국 시장 마감', color:'#58a6ff', fg:['C1','C2']},
-  fed_macro:     {label:'Fed·주요 발언',   color:'#e3b341', fg:['C4','PI4']},
-  economic_data: {label:'경제지표',         color:'#3fb950', fg:['C4','§10']},
-  earnings:      {label:'실적 발표',        color:'#bc8cff', fg:['C1','§5']},
-  credit_bonds:  {label:'신용·채권',        color:'#f85149', fg:['HY OAS','C4']},
-  geopolitical:  {label:'지정학·매크로',    color:'#ffa657', fg:['PI4','C5']},
+// ─── SECTION CONFIGS ─────────────────────────────────────────
+const AFTER_SECS={
+  market_close: {label:'시장 마감',    color:'#58a6ff'},
+  fed_macro:    {label:'Fed·경제정책', color:'#e3b341'},
+  economic_data:{label:'경제지표',     color:'#3fb950'},
+  earnings:     {label:'기업 실적',    color:'#bc8cff'},
+  credit_bonds: {label:'채권·신용',    color:'#f85149'},
+  geopolitical: {label:'지정학·무역', color:'#ffa657'},
 };
-const PRE_SECS = {
-  asia_europe:  {label:'아시아·유럽',   color:'#58a6ff', fg:['C1','C4']},
-  events:       {label:'오늘 이벤트',   color:'#e3b341', fg:['§10']},
-  futures_vix:  {label:'선물·VIX',      color:'#3fb950', fg:['C3','HY OAS']},
-  news_update:  {label:'주요 업데이트', color:'#bc8cff', fg:['§5','§6']},
+const PRE_SECS={
+  asia_europe:  {label:'아시아·유럽',  color:'#58a6ff'},
+  events:       {label:'오늘 이벤트',  color:'#e3b341'},
+  futures_vix:  {label:'선물·변동성', color:'#3fb950'},
+  news_update:  {label:'주요 업데이트',color:'#bc8cff'},
 };
-const INS_SECS = {
-  research: {label:'리서치 보고서', color:'#bc8cff'},
-  column:   {label:'전문가 칼럼',   color:'#58a6ff'},
-};
-const FG_CLR = {
-  'C1':'#58a6ff','C2':'#3fb950','C3':'#e3b341',
-  'C4':'#ffa657','C5':'#bc8cff',
-  'HY OAS':'#f85149','PI4':'#ff7b72','SMA125':'#79c0ff',
-  '§5':'#6e7681','§6':'#6e7681','§7':'#6e7681','§10':'#6e7681',
+const INS_SECS={
+  research:{label:'리서치',  color:'#bc8cff'},
+  column:  {label:'전문가 칼럼',color:'#58a6ff'},
 };
 
-// ─── RSS FEEDS ────────────────────────────────────────────────
-const MARKET_FEEDS = [
-  {url:'https://feeds.reuters.com/reuters/businessNews',name:'Reuters'},
-  {url:'https://feeds.marketwatch.com/marketwatch/topstories/',name:'MarketWatch'},
-  {url:'https://www.cnbc.com/id/100003114/device/rss/rss.html',name:'CNBC'},
-  {url:'https://feeds.a.dj.com/rss/RSSMarketsMain.xml',name:'WSJ'},
-  {url:'https://www.federalreserve.gov/feeds/press_all.xml',name:'Federal Reserve'},
-  {url:'https://feeds.ft.com/rss/home/us',name:'FT'},
+// ─── MARKET SYMBOLS ──────────────────────────────────────────
+const MKT_SYMS=[
+  {sym:'^IXIC',label:'NASDAQ',fmt:v=>v>=1000?v.toLocaleString('en',{maximumFractionDigits:0}):v.toFixed(2)},
+  {sym:'^GSPC',label:'S&P500', fmt:v=>v.toLocaleString('en',{maximumFractionDigits:0})},
+  {sym:'^VIX', label:'VIX',    fmt:v=>v.toFixed(2)},
+  {sym:'^TNX', label:'10Y',    fmt:v=>v.toFixed(2)+'%'},
+  {sym:'DX-Y.NYB',label:'DXY', fmt:v=>v.toFixed(2)},
+];
+
+// ─── RSS FEEDS (25개) ────────────────────────────────────────
+const MARKET_FEEDS=[
+  // 글로벌 주요
+  {url:'https://feeds.reuters.com/reuters/businessNews',         name:'Reuters'},
+  {url:'https://feeds.reuters.com/reuters/companyNews',          name:'Reuters Co'},
+  {url:'https://feeds.marketwatch.com/marketwatch/topstories/',  name:'MarketWatch'},
+  {url:'https://feeds.marketwatch.com/marketwatch/marketpulse/', name:'MarketWatch Pulse'},
+  {url:'https://www.cnbc.com/id/100003114/device/rss/rss.html',  name:'CNBC Markets'},
+  {url:'https://www.cnbc.com/id/20910258/device/rss/rss.html',   name:'CNBC Economy'},
+  {url:'https://feeds.a.dj.com/rss/RSSMarketsMain.xml',          name:'WSJ Markets'},
+  {url:'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml',        name:'WSJ Business'},
+  {url:'https://feeds.ft.com/rss/home/us',                       name:'FT'},
   {url:'https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml',name:'NYT Economy'},
-  {url:'https://www.hankyung.com/feed/economy',name:'한국경제'},
-  {url:'https://www.mk.co.kr/rss/30200030',name:'매일경제'},
-  {url:'https://www.yna.co.kr/rss/economy.xml',name:'연합뉴스'},
+  {url:'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml',name:'NYT Business'},
+  // 채권·크레딧 전문
+  {url:'https://www.federalreserve.gov/feeds/press_all.xml',     name:'Federal Reserve'},
+  {url:'https://feeds.a.dj.com/rss/RSSOpinion.xml',              name:'WSJ Opinion'},
+  // 분석·인사이트
+  {url:'https://seekingalpha.com/market_currents.xml',           name:'Seeking Alpha'},
+  {url:'https://www.zerohedge.com/fullrss2.xml',                 name:'ZeroHedge'},
+  {url:'https://feeds.bloomberg.com/markets/news.rss',           name:'Bloomberg'},
+  {url:'https://www.barrons.com/xml/rss/3_7621.xml',             name:'Barron\'s'},
+  // 경제지표
+  {url:'https://www.calculatedriskblog.com/feeds/posts/default', name:'Calculated Risk'},
+  // 한국
+  {url:'https://www.hankyung.com/feed/economy',                  name:'한국경제'},
+  {url:'https://www.hankyung.com/feed/finance',                  name:'한국경제 금융'},
+  {url:'https://www.mk.co.kr/rss/30200030',                      name:'매일경제'},
+  {url:'https://biz.chosun.com/rss/rss.htm?id=economy',         name:'조선비즈'},
+  {url:'https://www.sedaily.com/Rss',                            name:'서울경제'},
+  {url:'https://www.yna.co.kr/rss/economy.xml',                  name:'연합뉴스'},
+  {url:'https://news.einfomax.co.kr/rss/allArticle.xml',         name:'연합인포맥스'},
 ];
-const INS_FEEDS = [
-  {url:'https://www.economist.com/finance-and-economics/rss.xml',name:'The Economist'},
-  {url:'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml',name:'WSJ Business'},
-  {url:'https://www.project-syndicate.org/rss',name:'Project Syndicate'},
-  {url:'https://hrexecutive.com/feed/',name:'HRE'}, // reuse a business feed
+const INS_FEEDS=[
+  {url:'https://www.economist.com/finance-and-economics/rss.xml', name:'The Economist'},
+  {url:'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml',         name:'WSJ Business'},
+  {url:'https://www.project-syndicate.org/rss',                   name:'Project Syndicate'},
+  {url:'https://feeds.bloomberg.com/markets/news.rss',            name:'Bloomberg'},
+  {url:'https://www.barrons.com/xml/rss/3_7621.xml',              name:'Barron\'s'},
+  {url:'https://seekingalpha.com/market_currents.xml',            name:'Seeking Alpha'},
+  {url:'https://www.calculatedriskblog.com/feeds/posts/default',  name:'Calculated Risk'},
 ];
 
-// ─── SYSTEM PROMPTS ───────────────────────────────────────────
-const SYS_AFTER = `당신은 투자 전략 분석가입니다. 현재 포지션은 SGOV 100% (현금 대기 중)입니다.
+// ─── SYSTEM PROMPTS ──────────────────────────────────────────
+const SYS_AFTER=`당신은 시장 전문 에디터입니다. 수집된 기사들을 분석하여 아래 JSON 형식으로만 응답하세요 (마크다운 없이 순수 JSON).
 
-아래 기사들을 읽고 반드시 순수 JSON만 응답하세요 (마크다운 코드블록 없이).
+목표: 투자자가 미국 시장 마감 후 "오늘 무슨 일이 있었는가"를 한 번에 파악할 수 있도록 정리.
 
-각 기사는 다음 형식으로 작성합니다:
-- title: 영문 기사는 반드시 한국어로 번역
-- summary: 이 기사에서 실제로 무슨 일이 있었는지, 숫자와 구체적 사실 중심으로 4~6문장 상세 서술. 마치 신문 기사를 읽어주듯이 자연스러운 한국어 산문으로 작성
-- fg_analysis: 이 뉴스가 투자 판단에 왜 중요한지, 어떤 시장 흐름과 연결되는지 3~4문장으로 쉬운 한국어 산문 설명. 약어나 기호 대신 "하이일드 채권 스프레드", "나스닥 모멘텀" 같이 풀어서 설명
-- source: 출처명
-- url: 기사 URL
-- fg_direction: "positive" 또는 "negative" 또는 "neutral"
-- fg_tags: 관련 지표 배열 (C1~C5, HY OAS, PI4 중 해당하는 것)
-- urgency: "high" 또는 "medium" 또는 "low"
+각 섹션 형식:
+{"headline":"섹션 핵심을 담은 신문 헤드라인","body":"관련 기사들을 종합해 하나의 완성된 기사로 재구성. 구체적 수치·인물 발언·배경 포함, 7~10문장 자연스러운 한국어 산문","analysis":"이 섹션이 시장 전체 맥락에서 왜 중요한지, 어떤 흐름과 연결되는지 3~4문장 심층 산문 분석. 전문용어는 괄호로 풀어서","sources":["출처들"],"urls":["url들"],"urgency":"high|medium|low"}
 
-응답 형식:
-{"sections":{"market_close":[],"fed_macro":[],"economic_data":[],"earnings":[],"credit_bonds":[],"geopolitical":[]},"fg_insight":"오늘 시장 전체를 관통하는 핵심 흐름을 3~4문장 산문으로 설명. 현금 포지션 유지 또는 재진입 관점에서 판단"}
+응답:
+{"highlights":[{"text":"오늘 가장 중요한 사실 한 문장","dot_color":"#컬러"}],"sections":{"market_close":null,"fed_macro":null,"economic_data":null,"earnings":null,"credit_bonds":null,"geopolitical":null},"daily_summary":"오늘 시장 전체를 아우르는 핵심 흐름 3~4문장"}
 
-섹션 배치 (각 최대 2건, 중요도 높은 것만):
-- market_close: 미국 주요 지수 마감 동향
-- fed_macro: 연준 및 주요 인사 발언
-- economic_data: 경제지표 발표 결과
-- earnings: 주요 기업 실적
-- credit_bonds: 채권·신용 시장 동향
-- geopolitical: 관세·지정학·정치 리스크`;
+highlights는 오늘 꼭 알아야 할 핵심 팩트 3~5개. dot_color는 긍정=#3fb950, 부정=#f85149, 중립=#e3b341.
+관련 기사 없는 섹션은 null. 영문 내용은 반드시 한국어로.
 
-const SYS_PRE = `당신은 투자 전략 분석가입니다. 오늘 장 시작 전 브리핑입니다. 현재 포지션은 SGOV 100% (현금 대기 중)입니다.
+【팩트체크 필수 원칙】
+1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
+2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
+3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
+4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
+5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
 
-반드시 순수 JSON만 응답하세요 (마크다운 코드블록 없이).
-각 기사는 summary(4~6문장 상세 산문)와 fg_analysis(3~4문장 쉬운 산문 투자 해석)를 포함합니다.
+const SYS_PRE=`당신은 시장 전문 에디터입니다. 장 시작 전 브리핑을 아래 JSON 형식으로만 응답하세요 (마크다운 없이 순수 JSON).
 
-응답 형식:
-{"sections":{"asia_europe":[],"events":[],"futures_vix":[],"news_update":[]},"analysis":{"bull_case":"오늘 장에서 상승을 지지하는 근거를 3~4문장 산문으로 설명","bear_case":"오늘 장에서 하락을 우려하는 근거를 3~4문장 산문으로 설명","fg_stance":"현금 포지션 유지 또는 재진입 여부에 대한 판단을 3~4문장 산문으로 설명"}}
+각 섹션 형식 동일. 응답:
+{"highlights":[{"text":"오늘 장 시작 전 알아야 할 핵심 한 문장","dot_color":"#컬러"}],"sections":{"asia_europe":null,"events":null,"futures_vix":null,"news_update":null},"morning_summary":"오늘 장 시작 전 전체 흐름 3~4문장"}
 
-섹션 배치 (각 최대 2건):
-- asia_europe: 아시아·유럽 시장 동향
-- events: 오늘 예정된 경제지표·이벤트
-- futures_vix: 선물·변동성·신용 동향
-- news_update: 오버나이트 주요 뉴스`;
+【팩트체크 필수 원칙】
+1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
+2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
+3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
+4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
+5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
 
-const SYS_RT = `투자 전략 분석가입니다. 지금 이 시점에서 투자 판단에 중요한 뉴스 최대 6건을 선별하세요.
+const SYS_RT=`시장 에디터입니다. 지금 이 순간 가장 중요한 뉴스를 주제별로 묶어 통합 기사로 정리. JSON만 응답.
+{"highlights":[{"text":"지금 핵심","dot_color":"#컬러"}],"articles":[{"headline":"제목","body":"7~10문장 통합 기사","analysis":"3~4문장 분석","sources":[],"urls":[],"urgency":"high|medium|low"}],"snapshot_summary":"지금 시장 흐름 2~3문장"}
+최대 5개 섹션.
 
-반드시 순수 JSON만 응답하세요 (마크다운 코드블록 없이).
-각 기사는 summary(4~6문장 상세 산문)와 fg_analysis(3~4문장 쉬운 산문 투자 해석)를 포함합니다.
+【팩트체크 필수 원칙】
+1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
+2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
+3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
+4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
+5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
 
-응답 형식:
-{"articles":[],"quick_take":"지금 시장에서 가장 주목해야 할 흐름을 2~3문장 산문으로 설명"}`;
+const SYS_INS=`시장 분석 에디터입니다. 리서치 보고서와 전문가 칼럼의 핵심 논지를 통합 정리. JSON만 응답.
+{"articles":[{"headline":"핵심 논지 제목","body":"7~10문장 내용 정리","analysis":"3~4문장 투자 시사점","sources":[],"urls":[],"urgency":"high|medium|low"}],"weekly_summary":"이번 주 가장 주목할 시각 3~4문장"}
+최대 8개.
 
-const SYS_INS = `투자 리서치 분석가입니다. 이번 주 주목할 리서치 보고서와 전문가 칼럼을 선별합니다.
+【팩트체크 필수 원칙】
+1. 수치는 반드시 두 개 이상의 기사에서 교차 확인된 것만 사용. 단일 출처 수치는 "~로 알려졌다" 또는 "~라고 보도됐다"로 표현
+2. 인물 발언은 반드시 직접 인용 또는 출처 명시. 추정 발언 금지
+3. 확인되지 않은 사실은 서술하지 않음. 불확실한 내용은 "~할 것으로 예상된다", "~가능성이 제기된다"로 명확히 구분
+4. 오늘 날짜 기준으로 실제 발생한 일만 서술. 예측·전망은 본문과 구분해서 작성
+5. 헤드라인은 본문 내용을 정확히 반영해야 함. 과장·왜곡 금지`;
 
-반드시 순수 JSON만 응답하세요 (마크다운 코드블록 없이).
-각 기사는 summary(4~6문장 상세 산문)와 fg_analysis(3~4문장 쉬운 산문 투자 해석)를 포함합니다.
+// ─── KEYWORD FILTER ──────────────────────────────────────────
+const INV_KW=['market','stock','nasdaq','s&p','dow','equity','shares','trading','rally','selloff','bull','bear','fed','federal reserve','fomc','powell','interest rate','monetary','inflation','cpi','pce','gdp','yield','bond','treasury','credit','spread','high yield','junk','debt','tariff','trade','recession','dollar','dxy','oil','opec','vix','earnings','revenue','eps','guidance','semiconductor','chip','ai','nvidia','apple','microsoft','amazon','google','meta','tesla','jpmorgan','goldman','morgan stanley','blackrock','주식','나스닥','연준','금리','인플레이션','국채','달러','관세','반도체','시장','증시','채권','경제','지표','실적','물가','고용','성장률','무역','유가','환율','투자','리스크','변동성','신용','스프레드','하이일드','선물','파월','연방'];
+const isInvRel=a=>{const t=((a.title||'')+' '+(a.description||'')).toLowerCase();return INV_KW.some(k=>t.includes(k))};
 
-응답 형식:
-{"sections":{"research":[],"column":[]},"fg_weekly_view":"이번 주 시장을 이해하는 데 가장 중요한 관점을 3~4문장 산문으로 설명"}
-research 최대 4건, column 최대 4건.`;
+// ─── DATE FILTER (48h) ───────────────────────────────────────
+const isRecent=a=>{
+  if(!a.pubDate)return true;
+  try{const d=new Date(a.pubDate);return(Date.now()-d.getTime())<48*3600*1000}catch(e){return true}
+};
 
-// ─── KEYWORD FILTER ───────────────────────────────────────────
-const INV_KW = [
-  'market','stock','nasdaq','dow','spy','equity','shares','trading',
-  'rally','selloff','bull','bear','fed','federal reserve','fomc',
-  'interest rate','powell','monetary','inflation','cpi','pce','gdp',
-  'yield','bond','treasury','credit','spread','high yield','debt',
-  'tariff','trade','recession','dollar','dxy','oil','opec','vix',
-  'earnings','revenue','eps','guidance','semiconductor','chip','ai',
-  'nvidia','apple','microsoft','amazon','google','meta','tesla',
-  '주식','나스닥','연준','금리','인플레이션','국채','달러','관세',
-  '반도체','시장','증시','채권','코스피','경제','지표','실적',
-  '물가','고용','성장률','무역','유가','환율','투자','리스크',
-  '변동성','신용','스프레드','하이일드','선물',
-];
-function isInvRel(a) {
-  const t = ((a.title||'')+' '+(a.description||'')).toLowerCase();
-  return INV_KW.some(k => t.includes(k));
+// ─── STATE ──────────────────────────────────────────────────
+let _page='after', _isLoading=false, _srchTimer=null;
+
+// ─── STORAGE ────────────────────────────────────────────────
+const today=()=>new Date().toISOString().slice(0,10);
+const weekKey=()=>{const d=new Date(),day=d.getDay(),m=new Date(d);m.setDate(d.getDate()-(day===0?6:day-1));return m.toISOString().slice(0,10)};
+const ls=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+const lss=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const getAfter=()=>ls('inv_after_'+today());
+const setAfter=v=>lss('inv_after_'+today(),v);
+const getPre=()=>ls('inv_pre_'+today());
+const setPre=v=>lss('inv_pre_'+today(),v);
+const getRtList=()=>ls('inv_rt_list')||[];
+const addRt=s=>{const l=getRtList();l.unshift(s);if(l.length>30)l.pop();lss('inv_rt_list',l)};
+const getIns=()=>ls('inv_ins_'+weekKey());
+const setIns=v=>lss('inv_ins_'+weekKey(),v);
+
+// ─── MARKET DATA ────────────────────────────────────────────
+let _mktData={};
+async function fetchMarket(){
+  const el=document.getElementById('mkt-grid');
+  if(!el)return;
+  // Yahoo Finance via allorigins proxy
+  const results=await Promise.allSettled(MKT_SYMS.map(async s=>{
+    const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(s.sym)}?interval=1d&range=2d`;
+    const proxy=`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+    const r=await fetch(proxy,{signal:AbortSignal.timeout(8000)});
+    if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    const q=d?.chart?.result?.[0]?.meta;
+    if(!q)throw new Error('no data');
+    const price=q.regularMarketPrice||q.previousClose;
+    const prev=q.previousClose||q.chartPreviousClose;
+    const chg=price-prev, pct=(chg/prev)*100;
+    return{...s,price,chg,pct};
+  }));
+  let h='';
+  results.forEach((r,i)=>{
+    const s=MKT_SYMS[i];
+    if(r.status==='fulfilled'){
+      const {price,chg,pct,fmt,label}=r.value;
+      const cls=chg>0?'mkt-up':chg<0?'mkt-dn':'mkt-nc';
+      const sign=chg>=0?'+':'';
+      h+=`<div class="mkt-cell"><div class="mkt-sym">${label}</div><div class="mkt-val">${fmt(price)}</div><div class="mkt-chg ${cls}">${sign}${pct.toFixed(2)}%</div></div>`;
+    }else{
+      h+=`<div class="mkt-cell"><div class="mkt-sym">${s.label}</div><div class="mkt-val">—</div><div class="mkt-chg mkt-nc">—</div></div>`;
+    }
+  });
+  el.innerHTML=h;
+  const ts=document.getElementById('mkt-ts');
+  if(ts)ts.textContent=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
 }
 
-// ─── STATE ─────────────────────────────────────────────────────
-let _page = 'after';
-let _delTgt = null, _rclTgt = null, _memoTgt = null;
-let _rcStore = {};
-let _srchTimer = null;
-let _isLoading = false;
-
-// ─── STORAGE ──────────────────────────────────────────────────
-const today = () => new Date().toISOString().slice(0,10);
-const weekKey = () => {
-  const d = new Date(), day = d.getDay();
-  const m = new Date(d); m.setDate(d.getDate()-(day===0?6:day-1));
-  return m.toISOString().slice(0,10);
-};
-const ls  = k => { try{ return JSON.parse(localStorage.getItem(k)) }catch(e){ return null } };
-const lss = (k,v) => { try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){} };
-
-const getMemos  = () => ls('inv_memos') || {};
-const setMemos  = m => lss('inv_memos', m);
-const getAfter  = (d) => ls('inv_after_'+(d||today()));
-const setAfter  = (v,d) => lss('inv_after_'+(d||today()), v);
-const getPre    = (d) => ls('inv_pre_'+(d||today()));
-const setPre    = (v,d) => lss('inv_pre_'+(d||today()), v);
-const getRtList = () => ls('inv_rt_list') || [];
-const addRt     = snap => { const l=getRtList(); l.unshift(snap); if(l.length>50)l.pop(); lss('inv_rt_list',l); };
-const getIns    = (w) => ls('inv_ins_'+(w||weekKey()));
-const setIns    = (v,w) => lss('inv_ins_'+(w||weekKey()), v);
-
-// ─── RSS FETCH ────────────────────────────────────────────────
-async function fetchRSS(url, to=9000) {
-  const proxies = [
-    u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-    u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-    u => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}&count=15`,
+// ─── RSS FETCH ───────────────────────────────────────────────
+async function fetchRSS(url,to=7000){
+  const proxies=[
+    u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+    u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+    u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}&count=20`,
   ];
-  for(let i=0;i<proxies.length;i++){
+  for(const proxy of proxies){
     try{
-      const ctrl=new AbortController(), t=setTimeout(()=>ctrl.abort(),to);
-      const r=await fetch(proxies[i](url),{signal:ctrl.signal});
+      const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),to);
+      const r=await fetch(proxy(url),{signal:ctrl.signal});
       clearTimeout(t);
-      if(!r.ok) continue;
+      if(!r.ok)continue;
       const txt=await r.text();
-      if(i===2){
-        const j=JSON.parse(txt);
-        if(j.status!=='ok') continue;
+      if(proxy(url).includes('rss2json')){
+        const j=JSON.parse(txt);if(j.status!=='ok')continue;
         return j.items.map(it=>({title:it.title,description:it.description||it.summary||'',link:it.link,pubDate:it.pubDate,source:''}));
       }
       const doc=new DOMParser().parseFromString(txt,'text/xml');
-      return Array.from(doc.querySelectorAll('item')).slice(0,15).map(it=>({
+      return Array.from(doc.querySelectorAll('item')).slice(0,20).map(it=>({
         title:it.querySelector('title')?.textContent||'',
         description:it.querySelector('description')?.textContent||'',
         link:it.querySelector('link')?.textContent||'',
-        pubDate:it.querySelector('pubDate')?.textContent||'',
-        source:''
+        pubDate:it.querySelector('pubDate')?.textContent||'',source:''
       }));
     }catch(e){continue}
   }
-  return [];
+  return[];
 }
 
-async function fetchFeeds(feeds) {
+async function fetchFeeds(feeds){
   let all=[];
-  for(let i=0;i<feeds.length;i+=4){
-    const batch=feeds.slice(i,i+4);
+  for(let i=0;i<feeds.length;i+=5){
+    setLoadingMsg(`RSS 수집 중 (${Math.min(i+5,feeds.length)}/${feeds.length})...`);
+    const batch=feeds.slice(i,i+5);
     const res=await Promise.allSettled(batch.map(f=>fetchRSS(f.url)));
-    res.forEach((r,j)=>{
-      if(r.status==='fulfilled') r.value.forEach(a=>{a.source=batch[j].name;all.push(a)});
-    });
+    res.forEach((r,j)=>{if(r.status==='fulfilled')r.value.forEach(a=>{a.source=batch[j].name;all.push(a)})});
   }
   return all;
 }
 
-// ─── CLAUDE ───────────────────────────────────────────────────
-async function callClaude(sys, articles) {
+// ─── CLAUDE API ──────────────────────────────────────────────
+async function callClaude(sys,articles){
   const key=localStorage.getItem('inv_api_key')||'';
-  if(!key){showToast('API 키를 설정해주세요');return null}
-  // 기사 30건으로 줄이고 본문 100자로 축약
-  const body=articles.slice(0,30).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source}\n${(a.description||'').slice(0,100)}\nURL:${a.link}`).join('\n\n');
   const workerUrl=localStorage.getItem('inv_worker_url')||'';
+  if(!key){showToast('API 키를 설정해주세요');return null}
   if(!workerUrl){showToast('⚙ 설정에서 Worker URL을 입력해주세요');return null}
-  const payload=JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:4096,system:sys,
-    messages:[{role:'user',content:`오늘 날짜: ${today()}\n\n수집 기사 ${articles.length}건 (상위 30건 전달):\n\n${body}`}]});
-  let r=null;
+  const body=articles.slice(0,35).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source} | 날짜:${a.pubDate||'?'}\n${(a.description||'').replace(/<[^>]+>/g,'').slice(0,150)}\nURL:${a.link}`).join('\n\n');
+  const payload=JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:5000,system:sys,
+    messages:[{role:'user',content:`오늘 날짜: ${today()}\n수집 기사 ${articles.length}건 (상위 35건 전달):\n\n${body}`}]});
+  let r;
   try{
     const ctrl=new AbortController();
-    const tout=setTimeout(()=>{ctrl.abort();showToast('타임아웃 — 재시도해주세요')},50000);
+    const tout=setTimeout(()=>{ctrl.abort();showToast('타임아웃 — 재시도해주세요')},55000);
     r=await fetch(workerUrl,{signal:ctrl.signal,method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
-      body:payload});
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},body:payload});
     clearTimeout(tout);
-  }catch(e){
-    showToast('네트워크 오류: '+e.message);
-    console.error('Worker fetch error',e);
-    return null;
-  }
-  if(!r||!r.ok){
-    const err=await r.json().catch(()=>({}));
-    console.error('Worker error',r.status,err);
-    showToast('오류: '+(err.error?.message||r.status));
-    return null;
-  }
+  }catch(e){showToast('네트워크 오류: '+e.message);return null}
+  if(!r.ok){const err=await r.json().catch(()=>({}));showToast('API 오류: '+(err.error?.message||r.status));return null}
   const d=await r.json();
   const raw=d.content?.[0]?.text||'';
-  console.log('Claude raw response:', raw.slice(0,500));
   try{
-    // 1. 직접 파싱
     const clean=raw.replace(/```json|```/g,'').trim();
-    try{return JSON.parse(clean)}catch(e1){}
-    // 2. JSON 블록 추출
-    const m=clean.match(/\{[\s\S]*\}/);
-    if(m){try{return JSON.parse(m[0])}catch(e2){}}
-    // 3. 첫번째 { 부터 마지막 } 까지
-    const s=clean.indexOf('{'), e2=clean.lastIndexOf('}');
-    if(s>=0&&e2>s){try{return JSON.parse(clean.slice(s,e2+1))}catch(e3){}}
-    console.error('Parse failed, raw:', raw);
-    showToast('응답 파싱 실패 — 콘솔 확인');
-    return null;
-  }catch(e){showToast('응답 파싱 실패');return null}
+    try{return JSON.parse(clean)}catch(e){}
+    const s=clean.indexOf('{'),e2=clean.lastIndexOf('}');
+    if(s>=0&&e2>s)return JSON.parse(clean.slice(s,e2+1));
+    showToast('파싱 실패');return null;
+  }catch(e){showToast('파싱 실패');return null}
 }
 
-async function doFetch(mode) {
-  if(_isLoading) return;
-  _isLoading=true; setLoadingUI(true,'RSS 피드 수집 중...');
+async function doFetch(mode){
+  if(_isLoading)return;
+  _isLoading=true;setLoadingUI(true);
   try{
     const feeds=mode==='ins'?INS_FEEDS:MARKET_FEEDS;
-    let all=[];
-    for(let i=0;i<feeds.length;i+=4){
-      setLoadingMsg('RSS 수집 중 ('+i+'/'+feeds.length+')...');
-      const batch=feeds.slice(i,i+4);
-      const res=await Promise.allSettled(batch.map(f=>fetchRSS(f.url,6000)));
-      res.forEach((r,j)=>{
-        if(r.status==='fulfilled') r.value.forEach(a=>{a.source=batch[j].name;all.push(a)});
-      });
-    }
-    setLoadingMsg(all.length+'건 수집 — 필터링 중...');
-    const filtered=all.filter(isInvRel);
-    if(filtered.length<3) filtered.push(...all.slice(0,8));
-    setLoadingMsg(filtered.length+'건 필터됨 — Claude 분석 중...');
+    const all=await fetchFeeds(feeds);
+    const filtered=all.filter(a=>isInvRel(a)&&isRecent(a));
+    const final=filtered.length>=5?filtered:all.filter(isInvRel).slice(0,40);
+    setLoadingMsg(`${final.length}건 분석 중...`);
     const sys=mode==='after'?SYS_AFTER:mode==='pre'?SYS_PRE:mode==='rt'?SYS_RT:SYS_INS;
-    const result=await callClaude(sys,filtered);
-    if(!result){setLoadingUI(false);_isLoading=false;return}
+    const result=await callClaude(sys,final);
+    if(!result)return;
     result._at=new Date().toISOString();
     if(mode==='after'){setAfter(result);renderAfter()}
     else if(mode==='pre'){setPre(result);renderPre()}
     else if(mode==='rt'){addRt(result);renderRt()}
     else{setIns(result);renderIns()}
     autoSync();
-  }catch(e){
-    showToast('오류: '+e.message);
-    console.error('doFetch',e);
-  }finally{
-    _isLoading=false;
-    setLoadingUI(false);
-    console.log('doFetch done, isLoading reset');
-  }
+  }catch(e){showToast('오류: '+e.message);console.error(e)}
+  finally{_isLoading=false;setLoadingUI(false)}
 }
 
-// ─── RENDER UTILS ─────────────────────────────────────────────
+// ─── RENDER UTILS ────────────────────────────────────────────
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const fmt=iso=>{if(!iso)return'';const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+const fmt=iso=>{if(!iso)return'';const d=new Date(iso);return`${d.getMonth()+1}월 ${d.getDate()}일 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
 
-function fgTagsHtml(tags){
-  if(!tags||!tags.length)return'';
-  return tags.map(t=>{const c=FG_CLR[t]||'#6e7681';return`<span class="ftag" style="background:${c}18;color:${c};border:1px solid ${c}25">${t}</span>`}).join('');
-}
-
-function artHtml(a, sk, secK, tabK){
-  const id='r'+Math.random().toString(36).slice(2);
-  _rcStore[id]={a,sk,secK,tabK};
-  const memo=getMemos()[a.url]||'';
-  const urgCls=a.urgency==='high'?'urg-high':a.urgency==='medium'?'urg-mid':'';
-  const dirCls=a.fg_direction==='positive'?'pos':a.fg_direction==='negative'?'neg':'neu';
-  const canMove=tabK!=='rt';
-  const dirIcon=a.fg_direction==='positive'?'<span style="color:var(--green);font-size:10px;font-weight:700">▲</span>':a.fg_direction==='negative'?'<span style="color:var(--red);font-size:10px;font-weight:700">▼</span>':'<span style="color:var(--tx3);font-size:10px">─</span>';
-  const tagSnip=a.fg_tags?.slice(0,3).map(t=>{const c=FG_CLR[t]||'#6e7681';return`<span class="ftag" style="background:${c}18;color:${c};border:1px solid ${c}25">${t}</span>`}).join('')||'';
-  const analysis=a.fg_analysis||a.fg_comment||'';
-  return`<div class="acard ${urgCls}" id="card-${id}">
-  <div class="acard-hdr" onclick="toggleCard('${id}')" style="cursor:pointer;user-select:none">
-    <div class="atitle" style="margin-bottom:5px">${esc(a.title)}</div>
-    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-      <span class="asrc">${esc(a.source||'')}</span>
-      <span style="color:var(--tx3);font-size:10px">·</span>
-      ${dirIcon}
-      <div style="display:flex;gap:3px">${tagSnip}</div>
-      <span style="margin-left:auto;font-size:11px;color:var(--tx3);flex-shrink:0" id="chevron-${id}">▾ 상세</span>
-    </div>
-  </div>
-  <div class="acard-body" id="body-${id}" style="display:none;margin-top:11px;padding-top:11px;border-top:1px solid var(--border)">
-    <div style="font-size:13px;color:var(--tx);line-height:1.75;margin-bottom:12px">${esc(a.summary)}</div>
-    ${analysis?`<div style="background:rgba(88,166,255,.06);border-left:3px solid rgba(88,166,255,.4);border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:12px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:6px">투자 관점 분석</div>
-      <div style="font-size:13px;color:var(--tx2);line-height:1.75">${esc(analysis)}</div>
-    </div>`:''}
-    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-      ${a.url?`<a class="alink" href="${esc(a.url)}" target="_blank" rel="noopener" style="padding:5px 10px">원문 보기 ↗</a>`:''}
-      ${canMove?`<button class="abtn" onclick="openReclass('${id}')" title="섹션 이동"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4 4 4"/><path d="M17 8v12m0 0 4-4m-4 4-4-4"/></svg></button>`:''}
-      <button class="abtn" onclick="openDel('${id}')" title="삭제"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
-      <button class="abtn ${memo?'memo-on':''}" onclick="openMemo('${id}')" title="메모"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-    </div>
-    ${memo?`<div class="amemo-box" style="margin-top:8px"><div class="amemo-txt">${esc(memo)}</div></div>`:''}
+function mktDashHtml(){
+  return`<div class="mkt-dash">
+  <div class="mkt-dash-lbl">📊 시장 현황 <span class="mkt-ts" id="mkt-ts">—</span></div>
+  <div class="mkt-grid" id="mkt-grid">
+    ${MKT_SYMS.map(s=>`<div class="mkt-cell"><div class="mkt-sym">${s.label}</div><div class="mkt-skeleton"></div><div class="mkt-skeleton" style="width:40%;margin-top:4px"></div></div>`).join('')}
   </div>
 </div>`;
 }
 
-function toggleCard(id){
-  const body=document.getElementById('body-'+id);
-  const chev=document.getElementById('chevron-'+id);
-  if(!body)return;
-  const open=body.style.display==='none';
-  body.style.display=open?'block':'none';
-  chev.textContent=open?'▴ 닫기':'▾ 상세보기';
+function highlightsHtml(hl){
+  if(!hl||!hl.length)return'';
+  return`<div class="highlights">
+  <div class="hl-lbl">⚡ 오늘의 핵심</div>
+  ${hl.map(h=>`<div class="hl-item"><div class="hl-dot" style="background:${esc(h.dot_color||'#e3b341')}"></div><div class="hl-txt">${esc(h.text||'')}</div></div>`).join('')}
+</div>`;
 }
 
-function secGroupHtml(k,conf,arts,tabK,sk){
-  const cnt=arts&&arts.length||0;
-  return`<div class="sec-grp" id="sg-${sk}-${k}">
-  <div class="sec-hdr">
-    <div class="sec-dot" style="background:${conf.color}"></div>
-    <div class="sec-ttl" style="color:${conf.color}">${conf.label}</div>
-    <div class="sec-cnt">${cnt}건</div>
+function secArticleHtml(sec,conf){
+  if(!sec)return'';
+  const id='a'+Math.random().toString(36).slice(2);
+  const urgCls=sec.urgency==='high'?'urg-high':sec.urgency==='medium'?'urg-mid':'';
+  const urlList=(sec.urls||[]).filter(Boolean);
+  const srcStr=(sec.sources||[]).join(' · ');
+  return`<div class="sec-article ${urgCls}">
+  <div class="art-hdr" onclick="toggleArt('${id}')">
+    ${conf?`<div class="art-label"><div class="art-dot" style="background:${conf.color}"></div><div class="art-lbl-txt" style="color:${conf.color}">${conf.label}</div><div class="art-chevron" id="chev-${id}">▾</div></div>`:''}
+    <div class="art-headline">${esc(sec.headline||'')}</div>
   </div>
-  ${cnt?arts.map(a=>artHtml(a,sk,k,tabK)).join(''):`<div class="sec-empty">이번 회차 관련 뉴스 없음</div>`}
+  <div class="art-body-wrap" id="body-${id}">
+    <div class="art-body">${esc(sec.body||'')}</div>
+    ${sec.analysis?`<div class="art-analysis"><div class="art-analysis-lbl">📌 심층 분석</div><div class="art-analysis-txt">${esc(sec.analysis)}</div></div>`:''}
+    <div class="art-footer">
+      ${srcStr?`<span class="art-src">${esc(srcStr)}</span>`:''}
+      <div class="art-links">${urlList.map(u=>`<a class="art-link" href="${esc(u)}" target="_blank" rel="noopener">원문 보기</a>`).join('')}</div>
+    </div>
+  </div>
+</div>`;
+}
+
+function toggleArt(id){
+  const b=document.getElementById('body-'+id),c=document.getElementById('chev-'+id);
+  if(!b)return;
+  const open=b.classList.toggle('open');
+  if(c)c.textContent=open?'▴':'▾';
+}
+
+function summaryBox(lbl,txt){
+  if(!txt)return'';
+  return`<div class="summary-box"><div class="summary-lbl">${lbl}</div><div class="summary-txt">${esc(txt)}</div></div>`;
+}
+
+function tsBar(badge,cls,at){
+  return`<div style="display:flex;align-items:center;gap:8px;padding:10px 14px 0">
+  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:3px 9px;border-radius:5px;${cls}">${badge}</span>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3)">${fmt(at)} 업데이트</span>
 </div>`;
 }
 
 // ─── RENDER ──────────────────────────────────────────────────
 function renderAfter(){
-  const d=getAfter(), el=document.getElementById('after-el');
-  if(!d){el.innerHTML=emptyHtml('장후 브리핑','미국 시장 마감 후 F&G 전략 관점 종합 브리핑','장후 받기','doFetch(\'after\')');return}
-  let h='';
-  if(d.fg_insight) h+=`<div class="fg-box"><div class="fg-box-lbl">⚡ F&amp;G 전략 판단</div><div class="fg-box-text">${esc(d.fg_insight)}</div></div>`;
-  h+=`<div class="ts-bar"><div class="ts-badge ts-after">장후</div><div class="ts-time">${fmt(d._at)} 업데이트</div></div>`;
-  const secs=d.sections||{};
-  Object.entries(AFTER_SECS).forEach(([k,c])=>h+=secGroupHtml(k,c,secs[k],'after','after_'+today()));
+  const d=getAfter(),el=document.getElementById('after-el');
+  if(!d){el.innerHTML=emptyHtml('장후 브리핑','미국 시장 마감 후 주요 이슈를 통합 기사로 정리합니다','장후 받기',"doFetch('after')");return}
+  let h=mktDashHtml();
+  h+=tsBar('장후','background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.2)',d._at);
+  h+=highlightsHtml(d.highlights);
+  h+=summaryBox('📋 오늘의 요약',d.daily_summary);
+  h+='<div class="sec-wrap">';
+  Object.entries(AFTER_SECS).forEach(([k,c])=>{if(d.sections?.[k])h+=secArticleHtml(d.sections[k],c)});
+  h+='</div>';
   el.innerHTML=h;
+  setTimeout(fetchMarket,100);
 }
 
 function renderPre(){
-  const d=getPre(), el=document.getElementById('pre-el');
-  if(!d){el.innerHTML=emptyHtml('장전 브리핑','미국 장 시작 전 시장 준비 브리핑','장전 받기','doFetch(\'pre\')');return}
-  const secs=d.sections||{}, an=d.analysis||{};
-  let h=`<div class="ts-bar"><div class="ts-badge ts-pre">장전</div><div class="ts-time">${fmt(d._at)} 업데이트</div></div>`;
-  Object.entries(PRE_SECS).forEach(([k,c])=>h+=secGroupHtml(k,c,secs[k],'pre','pre_'+today()));
-  if(an.bull_case||an.bear_case) h+=`<div class="analysis-box">
-  <div class="analysis-hdr"><div class="analysis-hdr-lbl">균형 분석 &amp; F&amp;G 스탠스</div></div>
-  <div class="analysis-body">
-    <div class="analysis-grid">
-      <div class="acol"><div class="acol-lbl bull">▲ 상승 논거</div><div class="acol-txt">${esc(an.bull_case||'')}</div></div>
-      <div class="acol"><div class="acol-lbl bear">▼ 하락 논거</div><div class="acol-txt">${esc(an.bear_case||'')}</div></div>
-    </div>
-    ${an.fg_stance?`<div class="stance-box"><div class="stance-lbl">F&amp;G 전략 스탠스</div><div class="stance-txt">${esc(an.fg_stance)}</div></div>`:''}
-  </div>
-</div>`;
+  const d=getPre(),el=document.getElementById('pre-el');
+  if(!d){el.innerHTML=emptyHtml('장전 브리핑','미국 장 시작 전 주요 흐름을 정리합니다','장전 받기',"doFetch('pre')");return}
+  let h=mktDashHtml();
+  h+=tsBar('장전','background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.2)',d._at);
+  h+=highlightsHtml(d.highlights);
+  h+=summaryBox('📋 오늘 아침 요약',d.morning_summary);
+  h+='<div class="sec-wrap">';
+  Object.entries(PRE_SECS).forEach(([k,c])=>{if(d.sections?.[k])h+=secArticleHtml(d.sections[k],c)});
+  h+='</div>';
   el.innerHTML=h;
+  setTimeout(fetchMarket,100);
 }
 
 function renderRt(){
-  const list=getRtList(), el=document.getElementById('rt-el');
-  if(!list.length){el.innerHTML=emptyHtml('수시 업데이트','횟수 제한 없이 지금 시점 주요 뉴스를 즉시 받습니다','지금 받기','doFetch(\'rt\')');return}
-  let h=`<div class="rt-hdr"><div class="rt-title">수시 업데이트</div><div class="rt-cnt">${list.length}개 스냅샷</div></div>`;
-  list.forEach((snap,i)=>{
-    h+=`<div class="snap-block">
-    <div class="snap-ts"><div class="snap-line"></div><div class="snap-ts-lbl">${fmt(snap._at)}</div><div class="snap-line"></div></div>
-    ${snap.quick_take?`<div class="snap-qt"><div class="snap-qt-lbl">Quick Take</div><div class="snap-qt-txt">${esc(snap.quick_take)}</div></div>`:''}
-    ${(snap.articles||[]).map(a=>artHtml(a,'rt_'+i,'rt','rt')).join('')}
-    </div>`;
+  const list=getRtList(),el=document.getElementById('rt-el');
+  if(!list.length){el.innerHTML=emptyHtml('수시 업데이트','횟수 제한 없이 지금 시점 주요 뉴스를 즉시 받습니다','지금 받기',"doFetch('rt')");return}
+  let h='<div class="rt-snap">';
+  list.forEach(snap=>{
+    h+=`<div class="snap-divider"><div class="snap-line"></div><div class="snap-time">${fmt(snap._at)}</div><div class="snap-line"></div></div>`;
+    if(snap.snapshot_summary)h+=`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px"><div style="font-size:13px;color:var(--tx);line-height:1.75">${esc(snap.snapshot_summary)}</div></div>`;
+    if(snap.highlights)snap.highlights.forEach(hl=>{h+=`<div class="hl-item" style="margin-bottom:8px"><div class="hl-dot" style="background:${esc(hl.dot_color||'#e3b341')}"></div><div class="hl-txt">${esc(hl.text||'')}</div></div>`});
+    (snap.articles||[]).forEach(a=>h+=secArticleHtml(a,null));
   });
+  h+='</div>';
   el.innerHTML=h;
 }
 
 function renderIns(){
-  const d=getIns(), el=document.getElementById('ins-el');
-  if(!d){el.innerHTML=emptyHtml('주간 인사이트','리서치 보고서와 전문가 칼럼을 F&G 관점으로 큐레이션','인사이트 받기','doFetch(\'ins\')');return}
+  const d=getIns(),el=document.getElementById('ins-el');
+  if(!d){el.innerHTML=emptyHtml('주간 인사이트','리서치 보고서와 전문가 칼럼을 정리합니다','인사이트 받기',"doFetch('ins')");return}
   let h='';
-  if(d.fg_weekly_view) h+=`<div class="fg-box"><div class="fg-box-lbl">📊 주간 F&amp;G 뷰</div><div class="fg-box-text">${esc(d.fg_weekly_view)}</div></div>`;
-  h+=`<div class="ts-bar"><div class="ts-badge ts-ins">인사이트</div><div class="ts-time">${fmt(d._at)} 업데이트</div></div>`;
+  h+=tsBar('인사이트','background:rgba(188,140,255,.12);color:var(--purple);border:1px solid rgba(188,140,255,.2)',d._at);
+  h+=summaryBox('📋 이번 주 핵심 시각',d.weekly_summary||d.fg_weekly_view);
+  h+='<div class="sec-wrap">';
+  (d.articles||[]).forEach(a=>h+=secArticleHtml(a,null));
   const secs=d.sections||{};
-  Object.entries(INS_SECS).forEach(([k,c])=>h+=secGroupHtml(k,c,secs[k],'ins','ins_'+weekKey()));
+  Object.entries(INS_SECS).forEach(([k,c])=>(secs[k]||[]).forEach(a=>h+=secArticleHtml(a,c)));
+  h+='</div>';
   el.innerHTML=h;
 }
 
-// ─── SEARCH ───────────────────────────────────────────────────
+// ─── SEARCH ──────────────────────────────────────────────────
 function doSearch(q){
   const el=document.getElementById('search-el');
   if(!q||q.length<2){el.innerHTML='';return}
   const re=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
   const hl=t=>esc(t).replace(re,m=>`<span class="hl">${m}</span>`);
   const results=[];
-  const chk=(d,secs,tab)=>{if(!d||!d.sections)return;Object.values(d.sections).flat().forEach(a=>{if(a&&((a.title||'').match(re)||(a.summary||'').match(re)))results.push({...a,_tab:tab})})};
-  chk(getAfter(),AFTER_SECS,'장후');
-  chk(getPre(),PRE_SECS,'장전');
-  chk(getIns(),INS_SECS,'인사이트');
-  getRtList().forEach(s=>(s.articles||[]).forEach(a=>{if((a.title||'').match(re)||(a.summary||'').match(re))results.push({...a,_tab:'수시'})}));
-  if(!results.length){el.innerHTML=`<div style="font-size:13px;color:var(--tx3);padding:20px 4px">검색 결과 없음</div>`;return}
-  const memos=getMemos();
-  el.innerHTML=`<div style="font-size:11px;color:var(--tx3);margin-bottom:12px">${results.length}건 검색됨</div>`+results.map(a=>{
-    const memo=memos[a.url]||'';
-    return`<div class="acard">
-    <div style="margin-bottom:6px"><span class="sr-tab">${a._tab}</span> <span class="asrc">${esc(a.source||'')}</span></div>
-    <div class="atitle">${hl(a.title||'')}</div>
-    <div class="asum">${hl(a.summary||'')}</div>
-    <div class="ameta">${a.url?`<a class="alink" href="${esc(a.url)}" target="_blank" rel="noopener">원문↗</a>`:''}</div>
-    ${memo?`<div class="amemo-box"><div class="amemo-txt">${hl(memo)}</div></div>`:''}
-    </div>`;
-  }).join('');
+  const chkSecs=(d,tab)=>{
+    if(!d||!d.sections)return;
+    Object.values(d.sections).forEach(s=>{
+      if(s&&((s.headline||'').match(re)||(s.body||'').match(re)))results.push({...s,_tab:tab});
+    });
+    (d.articles||[]).forEach(s=>{if(s&&((s.headline||'').match(re)||(s.body||'').match(re)))results.push({...s,_tab:tab})});
+  };
+  chkSecs(getAfter(),'장후');chkSecs(getPre(),'장전');chkSecs(getIns(),'인사이트');
+  getRtList().forEach(snap=>(snap.articles||[]).forEach(a=>{if((a.headline||'').match(re)||(a.body||'').match(re))results.push({...a,_tab:'수시'})}));
+  if(!results.length){el.innerHTML=`<div style="font-size:13px;color:var(--tx3);padding:20px 0">검색 결과 없음</div>`;return}
+  el.innerHTML=`<div style="font-size:11px;color:var(--tx3);margin-bottom:10px">${results.length}건</div>`+
+  results.map(a=>`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:8px">
+    <div style="margin-bottom:6px"><span class="sr-tab">${a._tab}</span></div>
+    <div style="font-size:14px;font-weight:700;color:var(--tx);margin-bottom:8px;line-height:1.45">${hl(a.headline||'')}</div>
+    <div style="font-size:13px;color:var(--tx2);line-height:1.7">${hl((a.body||'').slice(0,200))}${(a.body||'').length>200?'...':''}</div>
+  </div>`).join('');
 }
+let _sTimer;
+function onSearch(v){clearTimeout(_sTimer);_sTimer=setTimeout(()=>doSearch(v),280)}
 
-// ─── EMPTY / LOADING ──────────────────────────────────────────
+// ─── EMPTY / LOADING ─────────────────────────────────────────
 function emptyHtml(ttl,sub,btn,act){return`<div class="empty">
-  <svg class="empty-ic" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+  <svg class="empty-ic" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
   <div class="empty-ttl">${esc(ttl)}</div>
   <div class="empty-sub">${esc(sub)}</div>
   <button class="empty-btn" onclick="${act}">${esc(btn)}</button>
 </div>`}
 
-function setLoadingUI(on, msg='뉴스 수집·분석 중...'){
-  document.querySelectorAll('.hbtn.primary').forEach(b=>{b.disabled=on});
+function setLoadingUI(on,msg='뉴스 수집 중...'){
+  document.querySelectorAll('.hbtn.fetch').forEach(b=>b.disabled=on);
   if(on){
-    const pageEl={after:'after-el',pre:'pre-el',rt:'rt-el',ins:'ins-el'}[_page];
-    if(pageEl) document.getElementById(pageEl).innerHTML=`<div class="loading"><div class="spinner"></div><div class="loading-txt" id="loading-msg">${msg}</div></div>`;
+    const ids={after:'after-el',pre:'pre-el',rt:'rt-el',ins:'ins-el'};
+    const el=document.getElementById(ids[_page]);
+    if(el)el.innerHTML=`<div class="loading"><div class="spinner"></div><div class="loading-txt" id="loading-msg">${msg}</div></div>`;
   }
 }
-function setLoadingMsg(msg){ const el=document.getElementById('loading-msg'); if(el) el.textContent=msg; }
+function setLoadingMsg(msg){const el=document.getElementById('loading-msg');if(el)el.textContent=msg}
 
-// ─── SWITCH PAGE ─────────────────────────────────────────────
-const SYNC_BTN=`<button class="hbtn" onclick="syncRefresh()" title="새로고침"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>`;
-const FETCH_BTN=(label,mode)=>`<button class="hbtn primary" onclick="doFetch('${mode}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>${label}</button>`;
-const SET_BTN=`<button class="hbtn" onclick="openM('m-settings')" title="설정"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>`;
+// ─── NAV / HEADER ────────────────────────────────────────────
+const FETCH_BTN=(lbl,mode)=>`<button class="hbtn fetch" onclick="doFetch('${mode}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>${lbl}</button>`;
+const SET_BTN=`<button class="hbtn" onclick="openM('m-settings')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>`;
+const SYNC_BTN=`<button class="hbtn" onclick="syncRefresh()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>`;
 
 function switchPage(p){
   _page=p;
@@ -840,87 +732,14 @@ function switchPage(p){
   const titles={after:'장후 브리핑',pre:'장전 브리핑',rt:'수시 업데이트',ins:'인사이트',search:'검색'};
   document.getElementById('hdr-title').textContent=titles[p]||'';
   const acts=document.getElementById('hdr-acts');
-  if(p==='after')     acts.innerHTML=SET_BTN+FETCH_BTN('장후 받기','after')+SYNC_BTN;
-  else if(p==='pre')  acts.innerHTML=FETCH_BTN('장전 받기','pre')+SYNC_BTN;
-  else if(p==='rt')   acts.innerHTML=FETCH_BTN('지금 받기','rt')+SYNC_BTN;
-  else if(p==='ins')  acts.innerHTML=FETCH_BTN('인사이트 받기','ins')+SYNC_BTN;
-  else if(p==='search') acts.innerHTML=`<div class="hsw"><input type="search" class="hsi" id="srch-inp" placeholder="검색" oninput="onSearch(this.value)"></div>`+SYNC_BTN;
-}
-
-function onSearch(v){ clearTimeout(_srchTimer); _srchTimer=setTimeout(()=>doSearch(v),280) }
-
-// ─── ARTICLE ACTIONS ─────────────────────────────────────────
-function openDel(id){
-  _delTgt=id;
-  document.getElementById('del-title').textContent=_rcStore[id].a.title;
-  openM('m-del');
-}
-function confirmDel(){
-  if(!_delTgt)return;
-  const {a,sk,secK,tabK}=_rcStore[_delTgt];
-  delArt(a,sk,secK,tabK); _delTgt=null; closeM('m-del');
-}
-function delArt(a,sk,secK,tabK){
-  const key=a.url||a.title;
-  const filter=arr=>arr.filter(x=>(x.url||x.title)!==key);
-  if(sk.startsWith('after_')){const d=getAfter();if(!d)return;if(d.sections[secK])d.sections[secK]=filter(d.sections[secK]);setAfter(d);renderAfter()}
-  else if(sk.startsWith('pre_')){const d=getPre();if(!d)return;if(d.sections[secK])d.sections[secK]=filter(d.sections[secK]);setPre(d);renderPre()}
-  else if(sk.startsWith('ins_')){const d=getIns();if(!d)return;if(d.sections[secK])d.sections[secK]=filter(d.sections[secK]);setIns(d);renderIns()}
-  else if(sk.startsWith('rt_')){const idx=parseInt(sk.split('_')[1]),l=getRtList();if(l[idx])l[idx].articles=filter(l[idx].articles||[]);lss('inv_rt_list',l);renderRt()}
-  autoSync(); showToast('삭제됨');
-}
-
-function openReclass(id){
-  _rclTgt=id;
-  const {sk,secK}=_rcStore[id];
-  const tabs=[['after',AFTER_SECS],['pre',PRE_SECS],['ins',INS_SECS]];
-  tabs.forEach(([t,secs])=>{
-    document.getElementById('rcl-'+t).innerHTML=Object.entries(secs).map(([k,c])=>{
-      const cur=sk.startsWith(t+'_')&&secK===k;
-      return`<div class="sec-item ${cur?'disabled':''}" onclick="doReclass('${t}','${k}')">
-        <div class="si-dot" style="background:${c.color}"></div>
-        <div class="si-name">${c.label}</div>
-        ${cur?'<div class="si-cur">← 현재</div>':''}
-      </div>`;
-    }).join('');
-  });
-  openM('m-reclass');
-}
-function doReclass(tt,ts){
-  if(!_rclTgt)return;
-  const {a,sk,secK}=_rcStore[_rclTgt];
-  // remove from source (quiet)
-  const key=a.url||a.title;
-  const filt=arr=>arr.filter(x=>(x.url||x.title)!==key);
-  if(sk.startsWith('after_')){const d=getAfter();if(d&&d.sections[secK]){d.sections[secK]=filt(d.sections[secK]);setAfter(d)}}
-  else if(sk.startsWith('pre_')){const d=getPre();if(d&&d.sections[secK]){d.sections[secK]=filt(d.sections[secK]);setPre(d)}}
-  else if(sk.startsWith('ins_')){const d=getIns();if(d&&d.sections[secK]){d.sections[secK]=filt(d.sections[secK]);setIns(d)}}
-  // add to target
-  if(tt==='after'){const d=getAfter()||{sections:{},_at:new Date().toISOString()};if(!d.sections)d.sections={};if(!d.sections[ts])d.sections[ts]=[];d.sections[ts].unshift(a);setAfter(d)}
-  else if(tt==='pre'){const d=getPre()||{sections:{},_at:new Date().toISOString()};if(!d.sections)d.sections={};if(!d.sections[ts])d.sections[ts]=[];d.sections[ts].unshift(a);setPre(d)}
-  else if(tt==='ins'){const d=getIns()||{sections:{},_at:new Date().toISOString()};if(!d.sections)d.sections={};if(!d.sections[ts])d.sections[ts]=[];d.sections[ts].unshift(a);setIns(d)}
-  closeM('m-reclass'); renderAfter(); renderPre(); renderIns();
-  autoSync(); showToast('이동 완료');
-}
-
-function openMemo(id){
-  _memoTgt=id;
-  const {a}=_rcStore[id];
-  document.getElementById('memo-ttl').textContent=a.title;
-  document.getElementById('memo-inp').value=getMemos()[a.url]||'';
-  openM('m-memo');
-}
-function saveMemo(){
-  if(!_memoTgt)return;
-  const {a}=_rcStore[_memoTgt];
-  const memos=getMemos(), v=document.getElementById('memo-inp').value.trim();
-  if(v)memos[a.url]=v; else delete memos[a.url];
-  setMemos(memos); closeM('m-memo');
-  if(_page==='after')renderAfter();
-  else if(_page==='pre')renderPre();
-  else if(_page==='rt')renderRt();
-  else if(_page==='ins')renderIns();
-  autoSync(); showToast('메모 저장됨');
+  if(p==='after')   acts.innerHTML=SET_BTN+FETCH_BTN('장후 받기','after')+SYNC_BTN;
+  else if(p==='pre') acts.innerHTML=FETCH_BTN('장전 받기','pre')+SYNC_BTN;
+  else if(p==='rt')  acts.innerHTML=FETCH_BTN('지금 받기','rt')+SYNC_BTN;
+  else if(p==='ins') acts.innerHTML=FETCH_BTN('인사이트','ins')+SYNC_BTN;
+  else if(p==='search') acts.innerHTML=SYNC_BTN;
+  // market refresh on after/pre
+  if(p==='after'&&getAfter())setTimeout(fetchMarket,100);
+  if(p==='pre'&&getPre())setTimeout(fetchMarket,100);
 }
 
 // ─── SETTINGS ────────────────────────────────────────────────
@@ -931,14 +750,21 @@ function saveSettings(){
   if(k)localStorage.setItem('inv_api_key',k);
   if(t)localStorage.setItem('inv_gist_token',t);
   if(w)localStorage.setItem('inv_worker_url',w);
-  closeM('m-settings'); showToast('저장됨');
+  closeM('m-settings');showToast('저장됨');
 }
 
-// ─── GIST SYNC ────────────────────────────────────────────────
-let _gistId=null;
-async function autoSync(){
-  const tok=localStorage.getItem('inv_gist_token'); if(!tok)return;
-  try{await gistUp(tok)}catch(e){}
+// ─── GIST SYNC ───────────────────────────────────────────────
+async function autoSync(){const tok=localStorage.getItem('inv_gist_token');if(!tok)return;try{await gistUp(tok)}catch(e){}}
+async function syncRefresh(){
+  const tok=localStorage.getItem('inv_gist_token');
+  if(!tok){
+    if(_page==='after')renderAfter();
+    else if(_page==='pre')renderPre();
+    else if(_page==='rt')renderRt();
+    else if(_page==='ins')renderIns();
+    showToast('새로고침 완료');return;
+  }
+  try{await gistDl(tok);renderAfter();renderPre();renderRt();renderIns();showToast('동기화 완료')}catch(e){showToast('동기화 실패')}
 }
 async function syncUp(){
   const tok=localStorage.getItem('inv_gist_token')||document.getElementById('inp-tok').value.trim();
@@ -951,22 +777,11 @@ async function syncDown(){
   const tok=localStorage.getItem('inv_gist_token')||document.getElementById('inp-tok').value.trim();
   if(!tok){document.getElementById('gst').textContent='토큰을 입력해주세요';return}
   document.getElementById('gst').textContent='가져오는 중...';
-  try{await gistDl(tok);document.getElementById('gst').textContent='완료 ✓ '+new Date().toLocaleTimeString('ko');renderAfter();renderPre();renderRt();renderIns()}
+  try{await gistDl(tok);renderAfter();renderPre();renderRt();renderIns();document.getElementById('gst').textContent='완료 ✓ '+new Date().toLocaleTimeString('ko')}
   catch(e){document.getElementById('gst').textContent='오류: '+e.message}
 }
-async function syncRefresh(){
-  const tok=localStorage.getItem('inv_gist_token');
-  if(!tok){showToast('Gist 토큰 미설정');return}
-  try{await gistDl(tok);renderAfter();renderPre();renderRt();renderIns();showToast('동기화 완료')}
-  catch(e){showToast('동기화 실패')}
-}
-function gistFiles(){
-  const files={};
-  Object.keys(localStorage).filter(k=>k.startsWith('inv_')&&!['inv_api_key','inv_gist_token','inv_gist_id'].includes(k)).forEach(k=>{
-    files[k+'.json']={content:localStorage.getItem(k)||'{}'};
-  });
-  return files;
-}
+let _gistId=null;
+function gistFiles(){const f={};Object.keys(localStorage).filter(k=>k.startsWith('inv_')&&!['inv_api_key','inv_gist_token','inv_worker_url','inv_gist_id'].includes(k)).forEach(k=>{f[k+'.json']={content:localStorage.getItem(k)||'{}'}});return f}
 async function gistUp(tok){
   const id=localStorage.getItem('inv_gist_id')||_gistId;
   const body={description:'INV Daily Sync',public:false,files:gistFiles()};
@@ -978,7 +793,7 @@ async function gistUp(tok){
 }
 async function gistDl(tok){
   const id=localStorage.getItem('inv_gist_id')||_gistId;
-  if(!id)throw new Error('Gist ID 없음. 먼저 올리기를 눌러주세요.');
+  if(!id)throw new Error('Gist ID 없음');
   const r=await fetch(`https://api.github.com/gists/${id}`,{headers:{'Authorization':`token ${tok}`}});
   if(!r.ok)throw new Error('HTTP '+r.status);
   const d=await r.json();
@@ -988,53 +803,27 @@ async function gistDl(tok){
 // ─── MODAL ───────────────────────────────────────────────────
 function openM(id){document.getElementById(id).classList.remove('hidden')}
 function closeM(id){document.getElementById(id).classList.add('hidden')}
-document.querySelectorAll('.overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)el.classList.add('hidden')})});
+document.querySelectorAll('.overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.add('hidden')}));
 
 // ─── TOAST ───────────────────────────────────────────────────
 let _tt;
-function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2200)}
+function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2500)}
 
-// ─── AUTO FETCH LOGIC ────────────────────────────────────────
-function shouldAuto(){
-  const kst=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'}));
-  const h=kst.getHours();
-  // 장후: KST 6am~9pm (미국 장 마감 후 시간대)
-  if(h>=6&&h<21&&!getAfter()){doFetch('after');return}
-  // 장전: KST 9pm~6am (미국 장 시작 전)
-  if((h>=21||h<6)&&!getPre()){doFetch('pre');return}
-  // 인사이트: 월요일
-  if(kst.getDay()===1&&!getIns()) setTimeout(()=>doFetch('ins'),3000);
-}
-
-// ─── INIT ─────────────────────────────────────────────────────
+// ─── INIT ────────────────────────────────────────────────────
 function init(){
-  // Restore settings
-  const k=localStorage.getItem('inv_api_key');
-  if(k) document.getElementById('inp-api').value=k;
-  const t=localStorage.getItem('inv_gist_token');
-  if(t) document.getElementById('inp-tok').value=t;
-  const w=localStorage.getItem('inv_worker_url');
-  if(w) document.getElementById('inp-worker').value=w;
-  document.getElementById('app-url').textContent=location.href.split('?')[0];
-
-  // Splash dismiss
+  const k=localStorage.getItem('inv_api_key'),t=localStorage.getItem('inv_gist_token'),w=localStorage.getItem('inv_worker_url');
+  if(k)document.getElementById('inp-api').value=k;
+  if(t)document.getElementById('inp-tok').value=t;
+  if(w)document.getElementById('inp-worker').value=w;
   setTimeout(()=>{
     const s=document.getElementById('splash');
     s.style.opacity='0';
-    setTimeout(()=>{s.style.display='none';document.getElementById('app').style.display='flex'},500);
-  },1600);
-
-  // Initial renders
+    setTimeout(()=>{s.style.display='none';document.getElementById('app').style.display='flex'},400);
+  },1400);
   switchPage('after');
-  renderAfter(); renderPre(); renderRt(); renderIns();
-
-  // Auto fetch after splash
-  setTimeout(shouldAuto, 2200);
-
-  // Service Worker
-  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  renderAfter();renderPre();renderRt();renderIns();
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
-
 init();
 </script>
 </body>
