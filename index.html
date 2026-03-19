@@ -507,13 +507,13 @@ async function callClaude(sys,articles){
   const workerUrl=localStorage.getItem('inv_worker_url')||'';
   if(!key){showToast('API 키를 설정해주세요');return null}
   if(!workerUrl){showToast('⚙ 설정에서 Worker URL을 입력해주세요');return null}
-  const body=articles.slice(0,35).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source} | 날짜:${a.pubDate||'?'}\n${(a.description||'').replace(/<[^>]+>/g,'').slice(0,150)}\nURL:${a.link}`).join('\n\n');
-  const payload=JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:5000,system:sys,
-    messages:[{role:'user',content:`오늘 날짜: ${today()}\n수집 기사 ${articles.length}건 (상위 35건 전달):\n\n${body}`}]});
+  const body=articles.slice(0,20).map((a,i)=>`[${i+1}] ${a.title}\n출처:${a.source}\n${(a.description||'').replace(/<[^>]+>/g,'').slice(0,80)}\nURL:${a.link}`).join('\n\n');
+  const payload=JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:3000,system:sys,
+    messages:[{role:'user',content:`오늘 날짜: ${today()}\n수집 기사 ${articles.length}건 (상위 20건 전달):\n\n${body}`}]});
   let r;
   try{
     const ctrl=new AbortController();
-    const tout=setTimeout(()=>{ctrl.abort();showToast('타임아웃 — 재시도해주세요')},55000);
+    const tout=setTimeout(()=>{ctrl.abort();showToast('타임아웃 — 재시도해주세요')},40000);
     r=await fetch(workerUrl,{signal:ctrl.signal,method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},body:payload});
     clearTimeout(tout);
