@@ -156,6 +156,12 @@ a{color:inherit;text-decoration:none}
 .gbtn:hover{border-color:var(--blue);color:var(--blue)}
 .gst{font-size:11px;color:var(--tx3);margin-top:8px;text-align:center;font-family:'JetBrains Mono',monospace}
 .code-box{background:var(--bg3);border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);line-height:1.7;white-space:pre-wrap;overflow-x:auto;margin-top:8px}
+.bg-bar{position:fixed;top:var(--hdr-h);left:0;right:0;z-index:50;height:2px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--blue));background-size:200% 100%;animation:bgload 1.2s linear infinite;display:none}
+.bg-bar.show{display:block}
+@keyframes bgload{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.fresh-badge{position:fixed;top:calc(var(--hdr-h)+6px);right:10px;z-index:51;background:rgba(63,185,80,.15);border:1px solid rgba(63,185,80,.3);color:var(--green);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;display:none;animation:fadein .3s}
+.fresh-badge.show{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 #toast{position:fixed;bottom:calc(var(--nav-h)+env(safe-area-inset-bottom)+12px);left:50%;transform:translateX(-50%) translateY(14px);background:rgba(22,27,34,.95);border:1px solid var(--border2);color:var(--tx);font-size:13px;padding:9px 16px;border-radius:10px;white-space:nowrap;opacity:0;transition:all .25s;pointer-events:none;z-index:200;backdrop-filter:blur(8px)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
@@ -169,6 +175,8 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div id="app" style="display:none">
+<div class="bg-bar" id="bg-bar"></div>
+<div class="fresh-badge" id="fresh-badge">✓ 새 데이터</div>
 <div id="hdr">
   <div class="hdr-title" id="hdr-title">장후 브리핑</div>
   <div class="hdr-acts" id="hdr-acts"></div>
@@ -395,33 +403,95 @@ async function callClaude(sys,articles){
 }
 
 // ─── MAIN FETCH ───────────────────────────────────────────────
+// 데이터 신선도 체크 (분 단위)
+function dataAge(mode){
+  const d=getD(mode);
+  if(!d||!d._at)return 9999;
+  return(Date.now()-new Date(d._at).getTime())/60000;
+}
+
+// 핵심 fetch 로직 (bg/fg 공통)
+async function fetchAndStore(mode){
+  const feeds=mode==='ins'?INS_FEEDS:FEEDS;
+  const res=await Promise.allSettled(feeds.map(f=>fetchRSS(f.u).then(items=>items.map(a=>({...a,source:f.n})))));
+  let all=[];res.forEach(r=>{if(r.status==='fulfilled')all.push(...r.value)});
+  const pool=all.filter(a=>isRel(a)&&isRecent(a));
+  const seen={},final=[];
+  for(const a of pool){seen[a.source]=(seen[a.source]||0)+1;if(seen[a.source]<=3)final.push(a);if(final.length>=25)break}
+  if(final.length<5)all.filter(isRel).slice(0,25).forEach(a=>{if(final.length<25)final.push(a)});
+  const sys={after:SYS_AFTER,pre:SYS_PRE,rt:SYS_RT,ins:SYS_INS}[mode];
+  const result=await callClaude(sys,final);
+  if(!result)return false;
+  result._at=new Date().toISOString();
+  setD(mode,result);
+  return true;
+}
+
+// 백그라운드 fetch — 캐시 데이터 유지하며 조용히 갱신
+let _bgRunning=false;
+async function bgFetch(mode){
+  if(_bgRunning||_loading)return;
+  _bgRunning=true;
+  const bar=document.getElementById('bg-bar');
+  if(bar)bar.classList.add('show');
+  try{
+    const ok=await fetchAndStore(mode);
+    if(ok){
+      render(mode);
+      autoSync();
+      // "새 데이터" 배지 잠깐 표시
+      const badge=document.getElementById('fresh-badge');
+      if(badge){badge.classList.add('show');setTimeout(()=>badge.classList.remove('show'),3000)}
+    }
+  }catch(e){console.error('bgFetch',e)}
+  finally{_bgRunning=false;if(bar)bar.classList.remove('show')}
+}
+
+// 수동 fetch — 로딩 화면 표시
 async function doFetch(mode){
   if(_loading)return;
   _loading=true;
-  // 캐시 삭제
-  if(mode!=='rt'){const k={after:'inv_after_',pre:'inv_pre_',ins:'inv_ins_'}[mode]+(mode==='ins'?weekKey():today());localStorage.removeItem(k)}
   setLoadingUI(true);
+  setMsg('뉴스 수집 중...');
   try{
-    const feeds=mode==='ins'?INS_FEEDS:FEEDS;
-    setMsg('뉴스 수집 중...');
-    // 전체 병렬
-    const res=await Promise.allSettled(feeds.map(f=>fetchRSS(f.u).then(items=>items.map(a=>({...a,source:f.n})))));
-    let all=[];res.forEach(r=>{if(r.status==='fulfilled')all.push(...r.value)});
-    // 필터 + 소스 다양성 (소스당 3건, 총 25건)
-    const pool=all.filter(a=>isRel(a)&&isRecent(a));
-    const seen={},final=[];
-    for(const a of pool){seen[a.source]=(seen[a.source]||0)+1;if(seen[a.source]<=3)final.push(a);if(final.length>=25)break}
-    if(final.length<5)all.filter(isRel).slice(0,25).forEach(a=>{if(final.length<25)final.push(a)});
-    setMsg(`${all.length}건 수집 → ${final.length}건 선별 → Claude 분석 중...`);
-    const sys={after:SYS_AFTER,pre:SYS_PRE,rt:SYS_RT,ins:SYS_INS}[mode];
-    const result=await callClaude(sys,final);
-    if(!result)return;
-    result._at=new Date().toISOString();
-    setD(mode,result);
-    render(mode);
-    autoSync();
+    const ok=await fetchAndStore(mode);
+    if(ok){render(mode);autoSync()}
   }catch(e){showToast('오류: '+e.message);console.error(e)}
   finally{_loading=false;setLoadingUI(false)}
+}
+
+// 자동 갱신 스케줄러
+let _autoTimer=null;
+function scheduleAuto(){
+  clearInterval(_autoTimer);
+  _autoTimer=setInterval(()=>{
+    const kst=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'}));
+    const h=kst.getHours();
+    // 장후: KST 6~21시, 30분마다 갱신
+    if(h>=6&&h<21&&dataAge('after')>30)bgFetch('after');
+    // 장전: KST 21~익일6시, 30분마다 갱신
+    if((h>=21||h<6)&&dataAge('pre')>30)bgFetch('pre');
+  },10*60*1000); // 10분마다 체크
+}
+
+// 앱 열릴 때 자동 결정
+function autoOnOpen(){
+  const key=localStorage.getItem('inv_api_key');
+  const wk=localStorage.getItem('inv_worker_url');
+  if(!key||!wk)return; // 설정 안 됐으면 스킵
+  const kst=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'}));
+  const h=kst.getHours();
+  if(h>=6&&h<21){
+    // 장후 시간대
+    if(dataAge('after')>30)setTimeout(()=>bgFetch('after'),1500);
+  } else {
+    // 장전 시간대
+    if(dataAge('pre')>30)setTimeout(()=>bgFetch('pre'),1500);
+  }
+  // 수시도 1시간 이상 됐으면
+  const rtList=JSON.parse(localStorage.getItem('inv_rt_list')||'[]');
+  const rtAge=rtList.length?((Date.now()-new Date(rtList[0]._at||0).getTime())/60000):9999;
+  if(rtAge>60)setTimeout(()=>bgFetch('rt'),5000);
 }
 
 // ─── 마켓 데이터 ──────────────────────────────────────────────
@@ -645,6 +715,10 @@ function init(){
   switchPage('after');
   ['after','pre','rt','ins'].forEach(render);
   if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  // 앱 열릴 때 자동 갱신
+  setTimeout(autoOnOpen, 1800);
+  // 주기적 갱신 스케줄
+  scheduleAuto();
 }
 init();
 </script>
